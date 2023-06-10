@@ -1,3 +1,5 @@
+import 'dart:io';
+
 const String x = '─';
 const String y = '│';
 
@@ -25,18 +27,18 @@ class Panel {
       final String pbl = title?.style.bl ?? style.bl;
       final String pbr = title?.style.br ?? style.br;
 
-      print('  $ptl${x * (title!.text.length + 2)}$ptr');
-      print(
+      stdout.writeln('  $ptl${x * (title!.text.length + 2)}$ptr');
+      stdout.writeln(
           '${style.tl}$x$y ${title!.text} $y${x * (panelWidth - widthCompensation)}${style.tr}');
-      print(
+      stdout.writeln(
           '$y $pbl${x * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y');
     }
 
     if (title == null) {
-      print('${style.tl}${x * (panelWidth - 2)}${style.tr}');
+      stdout.writeln('${style.tl}${x * (panelWidth - 2)}${style.tr}');
     }
-    print('$y $text ${" " * (panelWidth - titleLength - 4)}$y');
-    print(
+    stdout.writeln('$y $text ${" " * (panelWidth - titleLength - 4)}$y');
+    stdout.writeln(
         '${style.bl}${'─' * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style.br}');
   }
 
