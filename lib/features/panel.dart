@@ -32,12 +32,14 @@ class Panel {
           '${style.tl}$x$y ${title!.text} $y${x * (panelWidth - widthCompensation)}${style.tr}');
       stdout.writeln(
           '$y $pbl${x * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y');
+      stdout.writeln('$y $text ${" " * (panelWidth - text.length + 2)}$y');
     }
 
     if (title == null) {
-      stdout.writeln('${style.tl}${x * (panelWidth - 2)}${style.tr}');
+      stdout.writeln(
+          '${style.tl}${x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style.tr}');
+      stdout.writeln('$y $text ${" " * (panelWidth - text.length - 4)}$y');
     }
-    stdout.writeln('$y $text ${" " * (panelWidth - titleLength - 4)}$y');
     stdout.writeln(
         '${style.bl}${'─' * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style.br}');
   }
