@@ -1,5 +1,9 @@
 import 'package:chubby_bubble/features/panel.dart';
 
 void main(List<String> arguments) {
-  Panel('Hello world!', title: "Hey.").render();
+  Panel(
+    'Hello world!',
+    width: 80,
+    title: PanelTitle("Hey."),
+  ).render();
 }
