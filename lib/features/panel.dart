@@ -20,16 +20,16 @@ class Panel {
     final int widthCompensation = width != null ? 5 : 1;
 
     if (title != null) {
-      final String tl = title?.style.tl ?? style.tl;
-      final String tr = title?.style.tr ?? style.tr;
-      final String bl = title?.style.bl ?? style.bl;
-      final String br = title?.style.br ?? style.br;
+      final String ptl = title?.style.tl ?? style.tl;
+      final String ptr = title?.style.tr ?? style.tr;
+      final String pbl = title?.style.bl ?? style.bl;
+      final String pbr = title?.style.br ?? style.br;
 
-      print('  $tl${x * (title!.text.length + 2)}$tr');
+      print('  $ptl${x * (title!.text.length + 2)}$ptr');
       print(
-          '$tl$x$y ${title!.text} $y${x * (panelWidth - widthCompensation)}$tr');
+          '${style.tl}$x$y ${title!.text} $y${x * (panelWidth - widthCompensation)}${style.tr}');
       print(
-          '$y $bl${x * titleLength}$br${" " * (panelWidth - widthCompensation)}│');
+          '$y $pbl${x * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y');
     }
 
     if (title == null) {

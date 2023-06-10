@@ -4,6 +4,10 @@ void main(List<String> arguments) {
   Panel(
     'Hello world!',
     width: 80,
-    title: PanelTitle("Hey."),
+    style: PanelEdgeStyle.round,
+    title: PanelTitle(
+      "Hey.",
+      style: PanelEdgeStyle.square,
+    ),
   ).render();
 }
