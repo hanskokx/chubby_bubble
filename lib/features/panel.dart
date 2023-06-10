@@ -29,7 +29,7 @@ class Panel {
 
       stdout.writeln('  $ptl${x * (title!.text.length + 2)}$ptr');
       stdout.writeln(
-          '${style.tl}$x$y ${title!.text} $y${x * (panelWidth - widthCompensation)}${style.tr}');
+          '${style.tl}$x┤ ${title!.text} ├${x * (panelWidth - widthCompensation)}${style.tr}');
       stdout.writeln(
           '$y $pbl${x * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y');
       stdout.writeln('$y $text ${" " * (panelWidth - text.length + 2)}$y');
