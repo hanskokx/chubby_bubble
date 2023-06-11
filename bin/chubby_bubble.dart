@@ -7,6 +7,7 @@ main(List<String> arguments) {
   Panel(
     'Hello world!',
     width: 800,
+    alignment: TextAlignment.left,
     style: PanelEdgeStyle.square,
     title: PanelTitle(
       "Hey.",

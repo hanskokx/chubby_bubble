@@ -8,12 +8,14 @@ class Panel {
   final PanelTitle? title;
   final String text;
   final int? width;
+  final TextAlignment alignment;
 
   const Panel(
     this.text, {
     this.style = PanelEdgeStyle.round,
     this.title,
     this.width,
+    this.alignment = TextAlignment.left,
   });
 
   void render(Console console) {
@@ -34,16 +36,31 @@ class Panel {
           '${style.tl}$x┤ ${title!.text} ├${x * (panelWidth - widthCompensation)}${style.tr}');
       console.writeLine(
           '$y $pbl${x * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y');
-      console.writeLine('$y $text ${" " * (panelWidth - text.length + 2)}$y');
+
+      // console.writeLine('$y $text ${" " * (panelWidth - text.length + 2)}$y');
     }
 
     if (title == null) {
       console.writeLine(
           '${style.tl}${x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style.tr}');
-      console.writeLine('$y $text ${" " * (panelWidth - text.length - 4)}$y');
     }
+
+    writeBody(text, alignment, console);
     console.writeLine(
         '${style.bl}${'─' * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style.br}');
+  }
+
+  void writeBody(String text, TextAlignment alignment, Console console) {
+    final int padding = ((console.windowWidth / 2) - text.length).toInt() + 4;
+    console.write('$y ');
+    if (alignment == TextAlignment.right) console.write(' ' * padding * 2);
+    if (alignment == TextAlignment.center) console.write(' ' * padding);
+    console.write(text);
+    if (alignment == TextAlignment.center) console.write(' ' * padding);
+    if (alignment == TextAlignment.left) console.write(' ' * padding * 2);
+    console.write(' $y');
+    console.write('\n');
+    //  ${" " * (panelWidth - text.length - 4)}$y');
   }
 
   int _calculatePanelWidth(
