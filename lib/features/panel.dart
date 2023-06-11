@@ -1,4 +1,4 @@
-import 'package:dart_console2/dart_console2.dart';
+import 'package:dart_console/dart_console.dart';
 
 const String _x = '─';
 const String _y = '│';

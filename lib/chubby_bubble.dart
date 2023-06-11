@@ -1,9 +1,9 @@
 library chubby_bubble;
 
 import 'package:chubby_bubble/features/panel.dart';
-import 'package:dart_console2/dart_console2.dart';
+import 'package:dart_console/dart_console.dart';
 
-export 'package:dart_console2/dart_console2.dart' show TextAlignment;
+export 'package:dart_console/dart_console.dart' show TextAlignment;
 
 export 'features/panel.dart' show PanelCornerStyle, ChubbyPanelTitle;
 
