@@ -20,9 +20,7 @@ class ChubbyPanel {
 
   void render(Console console) {
     final int titleLength = title != null ? title!.text.length + 2 : 0;
-    final int consoleWidth = console.windowWidth;
-    final int panelWidth =
-        _calculatePanelWidth(text, titleLength, width, consoleWidth);
+    final int panelWidth = _calculatePanelWidth(text, titleLength, width);
     final int widthCompensation = width != null ? 5 : 1;
 
     if (title != null) {
@@ -52,12 +50,10 @@ class ChubbyPanel {
     String text,
     int titleLength,
     int? width,
-    int consoleWidth,
   ) {
     final int textLength = text.length;
 
     if (width == null) return textLength - titleLength;
-    if (width > consoleWidth) return consoleWidth - titleLength;
     if (width > textLength) return width - titleLength;
     if (width < textLength) return width - titleLength;
     return textLength + titleLength;
@@ -67,6 +63,12 @@ class ChubbyPanel {
       String text, TextAlignment alignment, int? width, Console console) {
     final int padding = ((width ?? 0 / 2) - (text.length + 4)).toInt();
 
+    // Compensate for text that would push the right border to a new line
+    // when the text is centered.
+    int paddingCompensation = ((padding ~/ 2).isOdd) ? 1 : 0;
+    if ((((padding ~/ 2) * 2) + paddingCompensation) + text.length + 4 >
+        console.windowWidth) paddingCompensation = 0;
+
     console.write('$_y ');
     if (alignment == TextAlignment.right) {
       console.write(' ' * padding);
@@ -74,7 +76,7 @@ class ChubbyPanel {
     if (alignment == TextAlignment.center) console.write(' ' * (padding ~/ 2));
     console.write(text);
     if (alignment == TextAlignment.center) {
-      console.write(' ' * ((padding ~/ 2) + (((padding ~/ 2).isOdd) ? 1 : 0)));
+      console.write(' ' * ((padding ~/ 2) + paddingCompensation));
     }
     if (alignment == TextAlignment.left) {
       console.write(' ' * padding);
