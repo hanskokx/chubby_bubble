@@ -1,11 +1,8 @@
-import 'package:chubby_bubble/features/panel.dart';
-import 'package:dart_console2/dart_console2.dart';
+import 'package:chubby_bubble/chubby_bubble.dart';
 
 main(List<String> arguments) {
-  final Console console = Console();
-
-  // ChubbyPanel with title
-  ChubbyPanel(
+  // Panel with title
+  ChubbyBubble.panel(
     'Left align panel with rounded corners and a title with rounded corners',
     alignment: TextAlignment.left,
     style: PanelCornerStyle.round,
@@ -13,9 +10,9 @@ main(List<String> arguments) {
       "ChubbyPanel",
       style: PanelCornerStyle.round,
     ),
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Center align panel with rounded corners and a title with rounded corners',
     alignment: TextAlignment.center,
     style: PanelCornerStyle.round,
@@ -23,9 +20,9 @@ main(List<String> arguments) {
       "ChubbyPanel",
       style: PanelCornerStyle.round,
     ),
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Right align panel with rounded corners and a title with rounded corners',
     alignment: TextAlignment.right,
     style: PanelCornerStyle.round,
@@ -33,82 +30,82 @@ main(List<String> arguments) {
       "ChubbyPanel",
       style: PanelCornerStyle.round,
     ),
-  ).render(console);
+  );
 
   // ChubbyPanel with no title
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Left align panel with rounded corners and no title',
     alignment: TextAlignment.left,
     style: PanelCornerStyle.round,
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Center align panel with rounded corners and no title',
     alignment: TextAlignment.center,
     style: PanelCornerStyle.round,
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Right align panel with rounded corners and no title',
     alignment: TextAlignment.right,
     style: PanelCornerStyle.round,
-  ).render(console);
+  );
 
   // ChubbyPanel with title and max width
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Left align panel with rounded corners and a title with rounded corners at maximum width',
     alignment: TextAlignment.left,
-    width: console.windowWidth,
+    width: 1000,
     style: PanelCornerStyle.round,
     title: ChubbyPanelTitle(
       "ChubbyPanel",
       style: PanelCornerStyle.round,
     ),
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Center align panel with rounded corners and a title with rounded corners at maximum width',
     alignment: TextAlignment.center,
-    width: console.windowWidth,
+    width: 1000,
     style: PanelCornerStyle.round,
     title: ChubbyPanelTitle(
       "ChubbyPanel",
       style: PanelCornerStyle.round,
     ),
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Right align panel with rounded corners and a title with rounded corners at maximum width',
     alignment: TextAlignment.right,
-    width: console.windowWidth,
+    width: 1000,
     style: PanelCornerStyle.round,
     title: ChubbyPanelTitle(
       "ChubbyPanel",
       style: PanelCornerStyle.round,
     ),
-  ).render(console);
+  );
 
   // ChubbyPanel with no title and max width
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Left align panel with rounded corners and no title',
-    width: console.windowWidth,
+    width: 1000,
     alignment: TextAlignment.left,
     style: PanelCornerStyle.round,
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Center align panel with rounded corners and no title',
-    width: console.windowWidth,
+    width: 1000,
     alignment: TextAlignment.center,
     style: PanelCornerStyle.round,
-  ).render(console);
+  );
 
-  ChubbyPanel(
+  ChubbyBubble.panel(
     'Right align panel with rounded corners and no title',
-    width: console.windowWidth,
+    width: 1000,
     alignment: TextAlignment.right,
     style: PanelCornerStyle.round,
-  ).render(console);
+  );
 
   return 0;
 }
