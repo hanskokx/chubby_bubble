@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:dart_console2/dart_console2.dart';
 
 const String x = '─';
 const String y = '│';
@@ -16,9 +16,11 @@ class Panel {
     this.width,
   });
 
-  void render() {
+  void render(Console console) {
     final int titleLength = title != null ? title!.text.length + 2 : 0;
-    final int panelWidth = _calculatePanelWidth(text, titleLength, width);
+    final int consoleWidth = console.windowWidth;
+    final int panelWidth =
+        _calculatePanelWidth(text, titleLength, width, consoleWidth);
     final int widthCompensation = width != null ? 5 : 1;
 
     if (title != null) {
@@ -27,20 +29,20 @@ class Panel {
       final String pbl = title?.style.bl ?? style.bl;
       final String pbr = title?.style.br ?? style.br;
 
-      stdout.writeln('  $ptl${x * (title!.text.length + 2)}$ptr');
-      stdout.writeln(
+      console.writeLine('  $ptl${x * (title!.text.length + 2)}$ptr');
+      console.writeLine(
           '${style.tl}$x┤ ${title!.text} ├${x * (panelWidth - widthCompensation)}${style.tr}');
-      stdout.writeln(
+      console.writeLine(
           '$y $pbl${x * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y');
-      stdout.writeln('$y $text ${" " * (panelWidth - text.length + 2)}$y');
+      console.writeLine('$y $text ${" " * (panelWidth - text.length + 2)}$y');
     }
 
     if (title == null) {
-      stdout.writeln(
+      console.writeLine(
           '${style.tl}${x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style.tr}');
-      stdout.writeln('$y $text ${" " * (panelWidth - text.length - 4)}$y');
+      console.writeLine('$y $text ${" " * (panelWidth - text.length - 4)}$y');
     }
-    stdout.writeln(
+    console.writeLine(
         '${style.bl}${'─' * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style.br}');
   }
 
@@ -48,10 +50,12 @@ class Panel {
     String text,
     int titleLength,
     int? width,
+    int consoleWidth,
   ) {
     final int textLength = text.length;
 
     if (width == null) return textLength - titleLength;
+    if (width > consoleWidth) return consoleWidth - titleLength;
     if (width > textLength) return width - titleLength;
     if (width < textLength) return width - titleLength;
     return textLength + titleLength;

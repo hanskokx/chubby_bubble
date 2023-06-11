@@ -8,6 +8,7 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  dart_console2: ^3.0.0
   # path: ^1.8.0
 
 dev_dependencies:

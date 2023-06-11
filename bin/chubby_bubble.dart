@@ -1,13 +1,18 @@
 import 'package:chubby_bubble/features/panel.dart';
+import 'package:dart_console2/dart_console2.dart';
 
-void main(List<String> arguments) {
+main(List<String> arguments) {
+  final Console console = Console();
+
   Panel(
     'Hello world!',
-    width: 80,
+    width: 800,
     style: PanelEdgeStyle.square,
     title: PanelTitle(
       "Hey.",
       style: PanelEdgeStyle.round,
     ),
-  ).render();
+  ).render(console);
+
+  return 0;
 }
