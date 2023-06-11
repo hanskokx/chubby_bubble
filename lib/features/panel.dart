@@ -20,7 +20,13 @@ class ChubbyPanel {
 
   void render(Console console) {
     final int titleLength = title != null ? title!.text.length + 2 : 0;
-    final int panelWidth = _calculatePanelWidth(text, titleLength, width);
+    final int panelWidth = _calculatePanelWidth(
+      text,
+      titleLength,
+      width,
+      console.windowWidth,
+    );
+
     final int widthCompensation = width != null ? 5 : 1;
 
     if (title != null) {
@@ -41,7 +47,19 @@ class ChubbyPanel {
           '${style._tl}${_x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style._tr}');
     }
 
-    _writeBody(text, alignment, width, console);
+    final int lineLength = panelWidth - 4;
+    final List<String> bodyText = [];
+    if (text.length > lineLength) {
+      RegExp rx = RegExp(
+          ".{1,$lineLength}(?=(.{$lineLength})+(?!.))|.{1,$lineLength}\$");
+      bodyText.addAll(rx.allMatches(text).map((m) => m.group(0) ?? ''));
+    } else {
+      bodyText.add(text);
+    }
+
+    for (final String line in bodyText) {
+      _writeBody(line, alignment, panelWidth, console);
+    }
     console.writeLine(
         '${style._bl}${'─' * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style._br}');
   }
@@ -50,13 +68,17 @@ class ChubbyPanel {
     String text,
     int titleLength,
     int? width,
+    int consoleWidth,
   ) {
     final int textLength = text.length;
+    int panelWidth = textLength + titleLength;
 
-    if (width == null) return textLength - titleLength;
-    if (width > textLength) return width - titleLength;
-    if (width < textLength) return width - titleLength;
-    return textLength + titleLength;
+    if (width == null) panelWidth = textLength - titleLength;
+    if (width != null && width > textLength) panelWidth = width - titleLength;
+    if (width != null && width < textLength) panelWidth = width - titleLength;
+    if (panelWidth > consoleWidth) panelWidth = consoleWidth;
+
+    return panelWidth;
   }
 
   void _writeBody(
