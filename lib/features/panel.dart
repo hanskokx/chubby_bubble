@@ -3,16 +3,16 @@ import 'package:dart_console2/dart_console2.dart';
 const String x = '─';
 const String y = '│';
 
-class Panel {
-  final PanelEdgeStyle style;
-  final PanelTitle? title;
+class ChubbyPanel {
+  final PanelCornerStyle style;
+  final ChubbyPanelTitle? title;
   final String text;
   final int? width;
   final TextAlignment alignment;
 
-  const Panel(
+  const ChubbyPanel(
     this.text, {
-    this.style = PanelEdgeStyle.round,
+    this.style = PanelCornerStyle.round,
     this.title,
     this.width,
     this.alignment = TextAlignment.left,
@@ -58,7 +58,9 @@ class Panel {
     }
     if (alignment == TextAlignment.center) console.write(' ' * (padding ~/ 2));
     console.write(text);
-    if (alignment == TextAlignment.center) console.write(' ' * (padding ~/ 2));
+    if (alignment == TextAlignment.center) {
+      console.write(' ' * ((padding ~/ 2) + (((padding ~/ 2).isOdd) ? 1 : 0)));
+    }
     if (alignment == TextAlignment.left) {
       console.write(' ' * padding);
     }
@@ -82,7 +84,14 @@ class Panel {
   }
 }
 
-enum PanelEdgeStyle {
+class ChubbyPanelTitle {
+  final String text;
+  final PanelCornerStyle style;
+
+  const ChubbyPanelTitle(this.text, {this.style = PanelCornerStyle.round});
+}
+
+enum PanelCornerStyle {
   round('╭', '╮', '╰', '╯'),
   square('┌', '┐', '└', '┘');
 
@@ -90,12 +99,5 @@ enum PanelEdgeStyle {
   final String tr;
   final String bl;
   final String br;
-  const PanelEdgeStyle(this.tl, this.tr, this.bl, this.br);
-}
-
-class PanelTitle {
-  final String text;
-  final PanelEdgeStyle style;
-
-  const PanelTitle(this.text, {this.style = PanelEdgeStyle.round});
+  const PanelCornerStyle(this.tl, this.tr, this.bl, this.br);
 }
