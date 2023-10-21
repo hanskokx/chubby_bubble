@@ -1,8 +1,5 @@
 import 'package:dart_console/dart_console.dart';
 
-const String _x = '─';
-const String _y = '│';
-
 class ChubbyPanel {
   final PanelCornerStyle style;
   final ChubbyPanelTitle? title;
@@ -29,39 +26,85 @@ class ChubbyPanel {
 
     final int widthCompensation = width != null ? 5 : 1;
 
-    if (title != null) {
-      final String ptl = title?.style._tl ?? style._tl;
-      final String ptr = title?.style._tr ?? style._tr;
-      final String pbl = title?.style._bl ?? style._bl;
-      final String pbr = title?.style._br ?? style._br;
+    final PanelCornerStyle cornerStyle = title?.style ?? style;
 
-      console.writeLine('  $ptl${_x * (title!.text.length + 2)}$ptr');
+    final PanelLineStyle line = title?.style == PanelCornerStyle.doubled
+        ? PanelLineStyle.doubled
+        : PanelLineStyle.single;
+
+    final String ptl = cornerStyle._tl;
+    final String ptr = cornerStyle._tr;
+    final String pbl = cornerStyle._bl;
+    final String pbr = cornerStyle._br;
+    final String px = line._x;
+
+    String vl = line._vl;
+    String vr = line._vr;
+
+    String x = line._x;
+    String y = line._y;
+
+    if (title?.style != PanelCornerStyle.doubled &&
+        style == PanelCornerStyle.doubled) {
+      vl = line._ovl;
+      vr = line._ovr;
+
+      x = PanelLineStyle.doubled._x;
+      y = PanelLineStyle.doubled._y;
+    }
+
+    if (title?.style == PanelCornerStyle.doubled &&
+        style != PanelCornerStyle.doubled) {
+      vl = line._ovl;
+      vr = line._ovr;
+
+      x = PanelLineStyle.single._x;
+      y = PanelLineStyle.single._y;
+    }
+
+    if (title != null) {
       console.writeLine(
-          '${style._tl}$_x┤ ${title!.text} ├${_x * (panelWidth - widthCompensation)}${style._tr}');
+        '  $ptl${px * (title!.text.length + 2)}$ptr',
+      );
+
       console.writeLine(
-          '$_y $pbl${_x * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$_y');
+        '${style._tl}$x$vl ${title!.text} $vr${x * (panelWidth - widthCompensation)}${style._tr}',
+      );
+      console.writeLine(
+        '$y $pbl${px * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y',
+      );
     }
 
     if (title == null) {
       console.writeLine(
-          '${style._tl}${_x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style._tr}');
+        '${style._tl}${x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style._tr}',
+      );
     }
 
     final int lineLength = panelWidth - 4;
     final List<String> bodyText = [];
     if (text.length > lineLength) {
       RegExp rx = RegExp(
-          ".{1,$lineLength}(?=(.{$lineLength})+(?!.))|.{1,$lineLength}\$");
+        ".{1,$lineLength}(?=(.{$lineLength})+(?!.))|.{1,$lineLength}\$",
+      );
       bodyText.addAll(rx.allMatches(text).map((m) => m.group(0) ?? ''));
     } else {
       bodyText.add(text);
     }
 
-    for (final String line in bodyText) {
-      _writeBody(line, alignment, panelWidth, console);
+    for (final String textLine in bodyText) {
+      _writeBody(
+        textLine,
+        alignment,
+        panelWidth,
+        console,
+        y,
+      );
     }
+
     console.writeLine(
-        '${style._bl}${'─' * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style._br}');
+      '${style._bl}${x * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style._br}',
+    );
   }
 
   int _calculatePanelWidth(
@@ -82,7 +125,12 @@ class ChubbyPanel {
   }
 
   void _writeBody(
-      String text, TextAlignment alignment, int? width, Console console) {
+    String text,
+    TextAlignment alignment,
+    int? width,
+    Console console,
+    String y,
+  ) {
     final int padding = ((width ?? 0 / 2) - (text.length + 4)).toInt();
 
     // Compensate for text that would push the right border to a new line
@@ -91,7 +139,7 @@ class ChubbyPanel {
     if ((((padding ~/ 2) * 2) + paddingCompensation) + text.length + 4 >
         console.windowWidth) paddingCompensation = 0;
 
-    console.write('$_y ');
+    console.write('$y ');
     if (alignment == TextAlignment.right) {
       console.write(' ' * padding);
     }
@@ -103,7 +151,7 @@ class ChubbyPanel {
     if (alignment == TextAlignment.left) {
       console.write(' ' * padding);
     }
-    console.write(' $_y');
+    console.write(' $y');
     console.write(console.newLine);
   }
 }
@@ -116,6 +164,7 @@ class ChubbyPanelTitle {
 }
 
 enum PanelCornerStyle {
+  doubled('╔', '╗', '╚', '╝'),
   round('╭', '╮', '╰', '╯'),
   square('┌', '┐', '└', '┘');
 
@@ -124,4 +173,25 @@ enum PanelCornerStyle {
   final String _bl;
   final String _br;
   const PanelCornerStyle(this._tl, this._tr, this._bl, this._br);
+}
+
+enum PanelLineStyle {
+  doubled('═', '║', '╣', '╢', '╠', '╟'),
+  single('─', '│', '┤', '╡', '├', '╞');
+
+  final String _x;
+  final String _y;
+  final String _vl;
+  final String _vr;
+  final String _ovl;
+  final String _ovr;
+
+  const PanelLineStyle(
+    this._x,
+    this._y,
+    this._vl,
+    this._ovl,
+    this._vr,
+    this._ovr,
+  );
 }

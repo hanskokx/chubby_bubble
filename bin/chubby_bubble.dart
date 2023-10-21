@@ -13,6 +13,46 @@ main(List<String> arguments) {
   );
 
   ChubbyBubble.panel(
+    'Left align panel with square corners and a title with doubled corners',
+    alignment: TextAlignment.left,
+    style: PanelCornerStyle.square,
+    title: ChubbyPanelTitle(
+      "ChubbyPanel",
+      style: PanelCornerStyle.doubled,
+    ),
+  );
+
+  ChubbyBubble.panel(
+    'Left align panel with doubled corners and a title with square corners',
+    alignment: TextAlignment.left,
+    style: PanelCornerStyle.doubled,
+    title: ChubbyPanelTitle(
+      "ChubbyPanel",
+      style: PanelCornerStyle.square,
+    ),
+  );
+
+  ChubbyBubble.panel(
+    'Left align panel with doubled corners and a title with round corners',
+    alignment: TextAlignment.left,
+    style: PanelCornerStyle.doubled,
+    title: ChubbyPanelTitle(
+      "ChubbyPanel",
+      style: PanelCornerStyle.round,
+    ),
+  );
+
+  ChubbyBubble.panel(
+    'Left align panel with round corners and a title with doubled corners',
+    alignment: TextAlignment.left,
+    style: PanelCornerStyle.round,
+    title: ChubbyPanelTitle(
+      "ChubbyPanel",
+      style: PanelCornerStyle.doubled,
+    ),
+  );
+
+  ChubbyBubble.panel(
     'Center align panel with rounded corners and a title with rounded corners',
     alignment: TextAlignment.center,
     style: PanelCornerStyle.round,
