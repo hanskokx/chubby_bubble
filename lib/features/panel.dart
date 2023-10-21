@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:chubby_bubble/classes/panel_title.dart';
+import 'package:chubby_bubble/classes/style.dart';
 import 'package:dart_console/dart_console.dart';
 
 class ChubbyPanel {
-  final PanelCornerStyle style;
+  final CornerStyle style;
   final ChubbyPanelTitle? title;
   final String text;
   final int? width;
@@ -9,7 +13,7 @@ class ChubbyPanel {
 
   const ChubbyPanel(
     this.text, {
-    this.style = PanelCornerStyle.round,
+    this.style = CornerStyle.round,
     this.title,
     this.width,
     this.alignment = TextAlignment.left,
@@ -24,42 +28,42 @@ class ChubbyPanel {
       console.windowWidth,
     );
 
+    print("Panel width: $panelWidth, Console width: ${stdout.terminalColumns}");
+
     final int widthCompensation = width != null ? 5 : 1;
 
-    final PanelCornerStyle cornerStyle = title?.style ?? style;
+    final CornerStyle cornerStyle = title?.style ?? style;
 
-    final PanelLineStyle line = title?.style == PanelCornerStyle.doubled
-        ? PanelLineStyle.doubled
-        : PanelLineStyle.single;
+    final LineStyle line = title?.style == CornerStyle.doubled
+        ? LineStyle.doubled
+        : LineStyle.single;
 
-    final String ptl = cornerStyle._tl;
-    final String ptr = cornerStyle._tr;
-    final String pbl = cornerStyle._bl;
-    final String pbr = cornerStyle._br;
-    final String px = line._x;
+    final String ptl = cornerStyle.tl;
+    final String ptr = cornerStyle.tr;
+    final String pbl = cornerStyle.bl;
+    final String pbr = cornerStyle.br;
+    final String px = line.x;
 
-    String vl = line._vl;
-    String vr = line._vr;
+    String vl = line.vl;
+    String vr = line.vr;
 
-    String x = line._x;
-    String y = line._y;
+    String x = line.x;
+    String y = line.y;
 
-    if (title?.style != PanelCornerStyle.doubled &&
-        style == PanelCornerStyle.doubled) {
-      vl = line._ovl;
-      vr = line._ovr;
+    if (title?.style != CornerStyle.doubled && style == CornerStyle.doubled) {
+      vl = line.ovl;
+      vr = line.ovr;
 
-      x = PanelLineStyle.doubled._x;
-      y = PanelLineStyle.doubled._y;
+      x = LineStyle.doubled.x;
+      y = LineStyle.doubled.y;
     }
 
-    if (title?.style == PanelCornerStyle.doubled &&
-        style != PanelCornerStyle.doubled) {
-      vl = line._ovl;
-      vr = line._ovr;
+    if (title?.style == CornerStyle.doubled && style != CornerStyle.doubled) {
+      vl = line.ovl;
+      vr = line.ovr;
 
-      x = PanelLineStyle.single._x;
-      y = PanelLineStyle.single._y;
+      x = LineStyle.single.x;
+      y = LineStyle.single.y;
     }
 
     if (title != null) {
@@ -68,7 +72,7 @@ class ChubbyPanel {
       );
 
       console.writeLine(
-        '${style._tl}$x$vl ${title!.text} $vr${x * (panelWidth - widthCompensation)}${style._tr}',
+        '${style.tl}$x$vl ${title!.text} $vr${x * (panelWidth - widthCompensation)}${style.tr}',
       );
       console.writeLine(
         '$y $pbl${px * titleLength}$pbr${" " * (panelWidth - widthCompensation)}$y',
@@ -77,7 +81,7 @@ class ChubbyPanel {
 
     if (title == null) {
       console.writeLine(
-        '${style._tl}${x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style._tr}',
+        '${style.tl}${x * (width != null ? panelWidth - 2 : panelWidth + 2)}${style.tr}',
       );
     }
 
@@ -103,7 +107,7 @@ class ChubbyPanel {
     }
 
     console.writeLine(
-      '${style._bl}${x * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style._br}',
+      '${style.bl}${x * ((panelWidth + 1) - (widthCompensation - 2) + (titleLength))}${style.br}',
     );
   }
 
@@ -154,44 +158,4 @@ class ChubbyPanel {
     console.write(' $y');
     console.write(console.newLine);
   }
-}
-
-class ChubbyPanelTitle {
-  final String text;
-  final PanelCornerStyle style;
-
-  const ChubbyPanelTitle(this.text, {this.style = PanelCornerStyle.round});
-}
-
-enum PanelCornerStyle {
-  doubled('╔', '╗', '╚', '╝'),
-  round('╭', '╮', '╰', '╯'),
-  square('┌', '┐', '└', '┘');
-
-  final String _tl;
-  final String _tr;
-  final String _bl;
-  final String _br;
-  const PanelCornerStyle(this._tl, this._tr, this._bl, this._br);
-}
-
-enum PanelLineStyle {
-  doubled('═', '║', '╣', '╢', '╠', '╟'),
-  single('─', '│', '┤', '╡', '├', '╞');
-
-  final String _x;
-  final String _y;
-  final String _vl;
-  final String _vr;
-  final String _ovl;
-  final String _ovr;
-
-  const PanelLineStyle(
-    this._x,
-    this._y,
-    this._vl,
-    this._ovl,
-    this._vr,
-    this._ovr,
-  );
 }
