@@ -103,7 +103,7 @@ class ChubbyPanel {
 
     if (title == null) {
       console.writeLine(
-        '${style.tl}${x * panelWidth}${style.tr}',
+        '${style.tl}${x * (panelWidth - 2)}${style.tr}',
       );
     }
 
@@ -128,14 +128,8 @@ class ChubbyPanel {
       );
     }
 
-    int panelBottomWidth = panelWidth;
-
-    if (title != null) {
-      panelBottomWidth -= 2;
-    }
-
     console.writeLine(
-      '${style.bl}${x * panelBottomWidth}${style.br}',
+      '${style.bl}${x * (panelWidth - 2)}${style.br}',
     );
   }
 
