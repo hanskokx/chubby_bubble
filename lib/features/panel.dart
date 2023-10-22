@@ -159,14 +159,12 @@ class ChubbyPanel {
     String text,
     String? title,
   ) {
-    final int consoleWidthIncludingPanel = stdout.terminalColumns - 4;
+    final int consoleWidth = stdout.terminalColumns;
 
-    int calculatedWidth = consoleWidthIncludingPanel;
+    int calculatedWidth = consoleWidth;
 
     calculatedWidth = width;
-    if (consoleWidthIncludingPanel < width) {
-      calculatedWidth = consoleWidthIncludingPanel;
-    }
+    if (consoleWidth < width) calculatedWidth = consoleWidth;
 
     // print("Calculating text width. Calculated width is $calculatedWidth");
 
