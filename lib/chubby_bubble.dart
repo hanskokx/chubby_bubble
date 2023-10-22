@@ -21,15 +21,11 @@ class ChubbyBubble {
     int? width,
     TextAlignment alignment = TextAlignment.left,
   }) {
-    final int maxWidth = ((width != null) && (width <= _console.windowWidth))
-        ? width
-        : _console.windowWidth;
-
     ChubbyPanel(
       text,
       alignment: alignment,
       style: style,
-      width: width != null ? maxWidth : null,
+      width: width,
       title: title != null
           ? ChubbyPanelTitle(
               title.text,

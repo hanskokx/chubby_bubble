@@ -78,7 +78,12 @@ class ChubbyPanel {
   }
 
   void render(Console console) {
+    print("-> The text length is ${text.length} and is → $text ←");
     final int panelWidth = _calculatePanelWidth(width, text, title?.text);
+    final int charactersPerLine =
+        _calculatedCharactersPerLine(width, text, title?.text);
+
+    print("The characters per line is $charactersPerLine");
 
     final LineStyle lineStyle = title?.style == CornerStyle.doubled
         ? LineStyle.doubled
@@ -107,11 +112,10 @@ class ChubbyPanel {
       );
     }
 
-    final int lineLength = panelWidth - 4;
     final List<String> bodyText = [];
-    if (text.length > lineLength) {
+    if (text.length > charactersPerLine) {
       RegExp rx = RegExp(
-        ".{1,$lineLength}(?=(.{$lineLength})+(?!.))|.{1,$lineLength}\$",
+        ".{1,$charactersPerLine}(?=(.{$charactersPerLine})+(?!.))|.{1,$charactersPerLine}\$",
       );
       bodyText.addAll(rx.allMatches(text).map((m) => m.group(0) ?? ''));
     } else {
@@ -122,7 +126,7 @@ class ChubbyPanel {
       _writeBody(
         textLine,
         alignment,
-        panelWidth,
+        charactersPerLine,
         console,
         y,
       );
@@ -134,12 +138,34 @@ class ChubbyPanel {
   }
 
   int _calculateNumberOfLines(int? width, String text, String? title) {
-    final int consoleWidth = stdout.terminalColumns;
-    int calculatedWidth = consoleWidth;
+    final int consoleWidthIncludingPanel = stdout.terminalColumns - 4;
+    final int charactersPerLine =
+        _calculatedCharactersPerLine(consoleWidthIncludingPanel, text, title);
 
-    if (width != null && consoleWidth > width) calculatedWidth = width;
+    int calculatedWidth = consoleWidthIncludingPanel;
 
-    final int numLines = (text.length / (calculatedWidth - 4)).ceil();
+    if (charactersPerLine <= consoleWidthIncludingPanel) {
+      print("Calculating text width. Text can fit on console.");
+    }
+
+    if (width != null) calculatedWidth = width;
+    if (width != null && consoleWidthIncludingPanel < width) {
+      calculatedWidth = consoleWidthIncludingPanel;
+    }
+
+    print("Calculating text width. Calculated width is $calculatedWidth");
+
+    int numLines = (text.length / calculatedWidth).ceil();
+
+    // if this will fit inside the panel, we should return it instead of dividing it.
+    if ((text.length % (width ?? consoleWidthIncludingPanel)).ceil() <=
+        calculatedWidth) {
+      numLines = 1;
+    }
+
+    print("Calculating text width. Num lines $numLines");
+
+    print('Number of lines => $numLines');
 
     return numLines;
   }
@@ -147,13 +173,13 @@ class ChubbyPanel {
   int _calculatePanelWidth(int? width, String text, String? title) {
     final int consoleWidth = stdout.terminalColumns;
 
-    int textLength = text.length + 4;
+    int textLength = text.length;
 
     final int numLines = _calculateNumberOfLines(width, text, title);
 
     if (numLines > 1) {
+      print("Number of lines is greater than one. $numLines");
       final int charactersPerLine = (text.length / numLines).round();
-      print("Characters per line: $charactersPerLine");
       textLength = charactersPerLine + 4;
     }
 
@@ -168,7 +194,6 @@ class ChubbyPanel {
     int panelWidth = consoleWidth;
 
     if (width == null) {
-      print("No width specified. Using text width.");
       if (textLength <= consoleWidth) panelWidth = textLength;
     }
 
@@ -183,17 +208,22 @@ class ChubbyPanel {
   void _writeBody(
     String text,
     TextAlignment alignment,
-    int? width,
+    int textWidth,
     Console console,
     String y,
   ) {
-    final int padding = ((width ?? 0 / 2) - (text.length + 4)).toInt();
+    final int consoleWidth = stdout.terminalColumns - 4;
+    final int padding = ((consoleWidth / 2) - textWidth).ceil();
 
     // Compensate for text that would push the right border to a new line
     // when the text is centered.
     int paddingCompensation = ((padding ~/ 2).isOdd) ? 1 : 0;
     if ((((padding ~/ 2) * 2) + paddingCompensation) + text.length + 4 >
         console.windowWidth) paddingCompensation = 0;
+
+    if (textWidth < consoleWidth) {
+      paddingCompensation += (consoleWidth - 4) - textWidth;
+    }
 
     console.write('$y ');
     if (alignment == TextAlignment.right) {
@@ -207,7 +237,22 @@ class ChubbyPanel {
     if (alignment == TextAlignment.left) {
       console.write(' ' * padding);
     }
+    if ((text.length + padding) < textWidth) {
+      console.write(' ' * ((textWidth - text.length) - 4));
+    }
+
     console.write(' $y');
     console.write(console.newLine);
+  }
+
+  int _calculatedCharactersPerLine(int? width, String text, String? title) {
+    print('_calculatedCharacterPerLine width: $width');
+    int charactersPerLine = text.length + 4;
+    final int maxWidth = width ?? stdout.terminalColumns;
+
+    if (width != null) charactersPerLine = width;
+    if (charactersPerLine <= maxWidth) charactersPerLine = maxWidth;
+
+    return charactersPerLine;
   }
 }
