@@ -78,12 +78,27 @@ class ChubbyPanel {
   }
 
   void render(Console console) {
-    print("-> The text length is ${text.length} and is → $text ←");
-    final int panelWidth = _calculatePanelWidth(width, text, title?.text);
+//     print('''
+// ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+// ║ ╭──────────────╮                                                                                                 ║
+// ║ │ ⚙️  Variables │                                                                                                 ║
+// ║ ╰──────────────╯                                                                                                 ║
+// ║ Style: $style
+// ║ Title:
+// ║        > Text: ${title?.text}
+// ║        > Style: ${title?.style}
+// ║ Title: $text
+// ║ Title length: ${text.length}
+// ║ Wdith: $width
+// ║ TextAlignment: $alignment
+// ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+// ''');
+    final int finalWidth = _calculatePanelWidth(
+        width ?? stdout.terminalColumns, text, title?.text);
     final int charactersPerLine =
-        _calculatedCharactersPerLine(width, text, title?.text);
-
-    print("The characters per line is $charactersPerLine");
+        _calculatedCharactersPerLine(finalWidth, text, title?.text);
+    final int numberOfLines = _calculateNumberOfLines(
+        finalWidth, charactersPerLine, text, title?.text);
 
     final LineStyle lineStyle = title?.style == CornerStyle.doubled
         ? LineStyle.doubled
@@ -103,17 +118,18 @@ class ChubbyPanel {
     }
 
     if (title != null) {
-      _renderTitle(title!, lineStyle, style, panelWidth, console);
+      // print("Rendering title with width $finalWidth.");
+      _renderTitle(title!, lineStyle, style, finalWidth, console);
     }
 
     if (title == null) {
       console.writeLine(
-        '${style.tl}${x * (panelWidth - 2)}${style.tr}',
+        '${style.tl}${x * (finalWidth - 2)}${style.tr}',
       );
     }
 
     final List<String> bodyText = [];
-    if (text.length > charactersPerLine) {
+    if (numberOfLines > 1) {
       RegExp rx = RegExp(
         ".{1,$charactersPerLine}(?=(.{$charactersPerLine})+(?!.))|.{1,$charactersPerLine}\$",
       );
@@ -133,76 +149,82 @@ class ChubbyPanel {
     }
 
     console.writeLine(
-      '${style.bl}${x * (panelWidth - 2)}${style.br}',
+      '${style.bl}${x * (finalWidth - 2)}${style.br}',
     );
   }
 
-  int _calculateNumberOfLines(int? width, String text, String? title) {
+  int _calculateNumberOfLines(
+    int width,
+    int charactersPerLine,
+    String text,
+    String? title,
+  ) {
     final int consoleWidthIncludingPanel = stdout.terminalColumns - 4;
-    final int charactersPerLine =
-        _calculatedCharactersPerLine(consoleWidthIncludingPanel, text, title);
 
     int calculatedWidth = consoleWidthIncludingPanel;
 
-    if (charactersPerLine <= consoleWidthIncludingPanel) {
-      print("Calculating text width. Text can fit on console.");
-    }
-
-    if (width != null) calculatedWidth = width;
-    if (width != null && consoleWidthIncludingPanel < width) {
+    calculatedWidth = width;
+    if (consoleWidthIncludingPanel < width) {
       calculatedWidth = consoleWidthIncludingPanel;
     }
 
-    print("Calculating text width. Calculated width is $calculatedWidth");
+    // print("Calculating text width. Calculated width is $calculatedWidth");
 
     int numLines = (text.length / calculatedWidth).ceil();
 
     // if this will fit inside the panel, we should return it instead of dividing it.
-    if ((text.length % (width ?? consoleWidthIncludingPanel)).ceil() <=
-        calculatedWidth) {
+    if ((text.length % width).ceil() <= calculatedWidth) {
       numLines = 1;
     }
 
-    print("Calculating text width. Num lines $numLines");
+    // print("Calculating text width. Num lines $numLines");
 
-    print('Number of lines => $numLines');
+    // print('Number of lines => $numLines');
 
     return numLines;
   }
 
-  int _calculatePanelWidth(int? width, String text, String? title) {
-    final int consoleWidth = stdout.terminalColumns;
+  int _calculatePanelWidth(
+    int width,
+    String text,
+    String? title,
+  ) {
+    // final int consoleWidth = stdout.terminalColumns;
 
-    int textLength = text.length;
+    // int textLength = text.length;
 
-    final int numLines = _calculateNumberOfLines(width, text, title);
+    // final int numLines = _calculateNumberOfLines(width, text, title);
 
-    if (numLines > 1) {
-      print("Number of lines is greater than one. $numLines");
-      final int charactersPerLine = (text.length / numLines).round();
-      textLength = charactersPerLine + 4;
+    // if (numLines > 1) {
+    //   final int charactersPerLine = (text.length / numLines).round();
+    //   textLength = charactersPerLine + 4;
+    // }
+
+    // final int titleLength = title != null ? title.length + 4 : 0;
+
+    // if (titleLength > textLength) textLength = titleLength;
+
+    // int panelWidth = consoleWidth;
+
+    // if (width == null && textLength <= consoleWidth) {
+    //   panelWidth = stdout.terminalColumns - 4;
+    // }
+
+    // if (width != null && panelWidth > textLength) panelWidth = textLength;
+
+    // print("_calculatePanelWidth: Returning $panelWidth");
+    // return panelWidth;
+
+    final int consoleWidthIncludingPanel = stdout.terminalColumns - 4;
+
+    int calculatedWidth = consoleWidthIncludingPanel;
+
+    calculatedWidth = width;
+    if (consoleWidthIncludingPanel < width) {
+      calculatedWidth = consoleWidthIncludingPanel;
     }
 
-    final int titleLength = title != null ? title.length + 4 : 0;
-
-    if (titleLength > textLength) textLength = titleLength;
-
-    print(
-      'Given Width: $width \nConsole Width: $consoleWidth \nActual Text Length: ${text.length} \nCalculated Text length: $textLength \nNumber of text lines: $numLines \n',
-    );
-
-    int panelWidth = consoleWidth;
-
-    if (width == null) {
-      if (textLength <= consoleWidth) panelWidth = textLength;
-    }
-
-    if (width != null && panelWidth > textLength) {
-      print("Width $width given; doing our best.");
-      return textLength;
-    }
-
-    return panelWidth;
+    return calculatedWidth;
   }
 
   void _writeBody(
@@ -246,12 +268,18 @@ class ChubbyPanel {
   }
 
   int _calculatedCharactersPerLine(int? width, String text, String? title) {
-    print('_calculatedCharacterPerLine width: $width');
     int charactersPerLine = text.length + 4;
     final int maxWidth = width ?? stdout.terminalColumns;
 
     if (width != null) charactersPerLine = width;
-    if (charactersPerLine <= maxWidth) charactersPerLine = maxWidth;
+    if (charactersPerLine > stdout.terminalColumns + 4) {
+      charactersPerLine = stdout.terminalColumns - 4;
+    }
+
+    if (charactersPerLine <= maxWidth) charactersPerLine = maxWidth - 4;
+
+    // print(
+    //     "🗨️  _calculatedCharactersPerLine: Characters per line: $charactersPerLine");
 
     return charactersPerLine;
   }
