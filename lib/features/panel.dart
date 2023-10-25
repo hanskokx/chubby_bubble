@@ -78,27 +78,11 @@ class ChubbyPanel {
   }
 
   void render(Console console) {
-//     print('''
-// ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
-// ║ ╭──────────────╮                                                                                                 ║
-// ║ │ ⚙️  Variables │                                                                                                 ║
-// ║ ╰──────────────╯                                                                                                 ║
-// ║ Style: $style
-// ║ Title:
-// ║        > Text: ${title?.text}
-// ║        > Style: ${title?.style}
-// ║ Title: $text
-// ║ Title length: ${text.length}
-// ║ Wdith: $width
-// ║ TextAlignment: $alignment
-// ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
-// ''');
     final int finalWidth = _calculatePanelWidth(
         width ?? stdout.terminalColumns, text, title?.text);
-    final int charactersPerLine =
-        _calculatedCharactersPerLine(finalWidth, text, title?.text);
-    final int numberOfLines = _calculateNumberOfLines(
-        finalWidth, charactersPerLine, text, title?.text);
+    final int charactersPerLine = _calculateCharactersPerLine(finalWidth, text);
+    final int numberOfLines =
+        _calculateNumberOfLines(finalWidth, charactersPerLine, text);
 
     final LineStyle lineStyle = title?.style == CornerStyle.doubled
         ? LineStyle.doubled
@@ -143,6 +127,7 @@ class ChubbyPanel {
         textLine,
         alignment,
         charactersPerLine,
+        finalWidth,
         console,
         y,
       );
@@ -153,31 +138,13 @@ class ChubbyPanel {
     );
   }
 
-  int _calculateNumberOfLines(
-    int width,
-    int charactersPerLine,
-    String text,
-    String? title,
-  ) {
-    final int consoleWidth = stdout.terminalColumns;
-
-    int calculatedWidth = consoleWidth;
-
-    calculatedWidth = width;
-    if (consoleWidth < width) calculatedWidth = consoleWidth;
-
-    // print("Calculating text width. Calculated width is $calculatedWidth");
-
-    int numLines = (text.length / calculatedWidth).ceil();
+  int _calculateNumberOfLines(int width, int charactersPerLine, String text) {
+    int numLines = (text.length / width).ceil();
 
     // if this will fit inside the panel, we should return it instead of dividing it.
-    if ((text.length % width).ceil() <= calculatedWidth) {
+    if ((text.length % width).ceil() > width) {
       numLines = 1;
     }
-
-    // print("Calculating text width. Num lines $numLines");
-
-    // print('Number of lines => $numLines');
 
     return numLines;
   }
@@ -229,55 +196,42 @@ class ChubbyPanel {
     String text,
     TextAlignment alignment,
     int textWidth,
+    int consoleWidth,
     Console console,
     String y,
   ) {
-    final int consoleWidth = stdout.terminalColumns - 4;
-    final int padding = ((consoleWidth / 2) - textWidth).ceil();
-
-    // Compensate for text that would push the right border to a new line
-    // when the text is centered.
-    int paddingCompensation = ((padding ~/ 2).isOdd) ? 1 : 0;
-    if ((((padding ~/ 2) * 2) + paddingCompensation) + text.length + 4 >
-        console.windowWidth) paddingCompensation = 0;
-
-    if (textWidth < consoleWidth) {
-      paddingCompensation += (consoleWidth - 4) - textWidth;
-    }
+    final int padding = ((consoleWidth - text.length) - 4).ceil();
 
     console.write('$y ');
-    if (alignment == TextAlignment.right) {
-      console.write(' ' * padding);
-    }
-    if (alignment == TextAlignment.center) console.write(' ' * (padding ~/ 2));
-    console.write(text);
-    if (alignment == TextAlignment.center) {
-      console.write(' ' * ((padding ~/ 2) + paddingCompensation));
-    }
-    if (alignment == TextAlignment.left) {
-      console.write(' ' * padding);
-    }
-    if ((text.length + padding) < textWidth) {
-      console.write(' ' * ((textWidth - text.length) - 4));
+
+    switch (alignment) {
+      case TextAlignment.left:
+        console.write(text);
+        console.write(' ' * padding);
+        break;
+      case TextAlignment.center:
+        final int leftPadding = (padding / 2).ceil();
+        final int rightPadding = consoleWidth - text.length - leftPadding - 4;
+        console.write(' ' * leftPadding);
+        console.write(text);
+        console.write(' ' * rightPadding);
+        break;
+      case TextAlignment.right:
+        console.write(' ' * padding);
+        console.write(text);
+        break;
     }
 
     console.write(' $y');
     console.write(console.newLine);
   }
 
-  int _calculatedCharactersPerLine(int? width, String text, String? title) {
-    int charactersPerLine = text.length + 4;
-    final int maxWidth = width ?? stdout.terminalColumns;
+  int _calculateCharactersPerLine(int width, String text) {
+    int charactersPerLine = width - 4;
 
-    if (width != null) charactersPerLine = width;
     if (charactersPerLine > stdout.terminalColumns + 4) {
       charactersPerLine = stdout.terminalColumns - 4;
     }
-
-    if (charactersPerLine <= maxWidth) charactersPerLine = maxWidth - 4;
-
-    // print(
-    //     "🗨️  _calculatedCharactersPerLine: Characters per line: $charactersPerLine");
 
     return charactersPerLine;
   }
