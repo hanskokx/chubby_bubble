@@ -1,3 +1,35 @@
+/// Decorate the corners of your panel.
+///
+/// Options include:
+///
+/// `CornerStyle.double`:
+///
+///         ╔════╗
+///         ╚════╝
+///
+///
+/// `CornerStyle.round`:
+///
+///         ╭────╮
+///         ╰────╯
+///
+///
+/// `CornerStyle.square`:
+///
+///         ┌────┐
+///         └────┘
+///
+///
+/// Combine with `EdgeStyle` for additional effects.
+///
+/// For example, a panel with `EdgeStyle.double` and `CornerStyle.round`
+/// would produce a panel with the left side looking like this:
+///
+///         ╭══
+///         ║
+///         ╰══
+///
+///
 enum CornerStyle {
   double('╔', '╗', '╚', '╝'),
   round('╭', '╮', '╰', '╯'),
