@@ -28,18 +28,9 @@ class ChubbyPanel {
     int width,
     Console console,
   ) {
-    final int titleLength = title.text.length + 2;
-
-    final String ptl = title.style.tl;
-    final String ptr = title.style.tr;
-    final String pbl = title.style.bl;
-    final String pbr = title.style.br;
-
     final LineStyle lineStyle = title.style == CornerStyle.doubled
         ? LineStyle.doubled
         : LineStyle.single;
-
-    final String px = lineStyle.x;
 
     String vl = lineStyle.vl;
     String vr = lineStyle.vr;
@@ -65,18 +56,34 @@ class ChubbyPanel {
       y = LineStyle.single.y;
     }
 
-    final int widthMinusTitlePanel = width - title.text.length - 7;
+    // Title's top border
+    _buffer.write('  ');
+    _buffer.write(title.style.tl);
+    _buffer.write(lineStyle.x * (title.text.length + 2));
+    _buffer.write(title.style.tr);
+    _buffer.writeln();
 
-    console.writeLine(
-      '  $ptl${px * (title.text.length + 2)}$ptr',
-    );
+    // Title content
+    _buffer.write(style.tl);
+    _buffer.write(x);
+    _buffer.write(vl);
+    _buffer.write(' ');
+    _buffer.write(title.text);
+    _buffer.write(' ');
+    _buffer.write(vr);
+    _buffer.write(x * (width - title.text.length - 7));
+    _buffer.write(style.tr);
+    _buffer.writeln();
 
-    console.writeLine(
-      '${style.tl}$x$vl ${title.text} $vr${x * widthMinusTitlePanel}${style.tr}',
-    );
-    console.writeLine(
-      '$y $pbl${px * titleLength}$pbr${" " * widthMinusTitlePanel}$y',
-    );
+    // Title's bottom border
+    _buffer.write(y);
+    _buffer.write(' ');
+    _buffer.write(title.style.bl);
+    _buffer.write(lineStyle.x * (title.text.length + 2));
+    _buffer.write(title.style.br);
+    _buffer.write(' ' * (width - title.text.length - 7));
+    _buffer.write(y);
+    _buffer.writeln();
   }
 
   void render(Console console) {
