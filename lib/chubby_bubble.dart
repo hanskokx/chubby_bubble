@@ -1,15 +1,18 @@
 library chubby_bubble;
 
+import 'package:chubby_bubble/classes/panel_style.dart';
 import 'package:chubby_bubble/classes/panel_title.dart';
-import 'package:chubby_bubble/classes/style.dart';
 import 'package:chubby_bubble/common/ansi.dart';
 import 'package:chubby_bubble/features/panel.dart';
 import 'package:dart_console/dart_console.dart';
 
 export 'package:dart_console/dart_console.dart' show TextAlignment;
 
+export 'classes/corner_style.dart' show CornerStyle;
+export 'classes/edge_style.dart' show EdgeStyle;
+export 'classes/panel_style.dart' show ChubbyPanelStyle;
 export 'classes/panel_title.dart' show ChubbyPanelTitle;
-export 'classes/style.dart' show CornerStyle, LineStyle;
+export 'common/ansi.dart' show AnsiCode, AnsiColor, AnsiReset, AnsiExtension;
 
 class ChubbyBubble {
   static final Console _console = Console();
@@ -17,7 +20,7 @@ class ChubbyBubble {
 
   static void panel(
     String text, {
-    CornerStyle style = CornerStyle.round,
+    ChubbyPanelStyle style = const ChubbyPanelStyle(),
     ChubbyPanelTitle? title,
     int? width,
     TextAlignment alignment = TextAlignment.left,
@@ -33,7 +36,6 @@ class ChubbyBubble {
           ? ChubbyPanelTitle(
               title.text,
               style: title.style,
-              color: title.color,
             )
           : null,
     ).render(_console);

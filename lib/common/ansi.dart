@@ -56,7 +56,7 @@ enum AnsiReset {
   const AnsiReset(this.value);
 }
 
-extension StringExtension on String {
+extension AnsiExtension on String {
   String blinking() {
     return AnsiCode.blinking.value + this + AnsiReset.blinking.value;
   }

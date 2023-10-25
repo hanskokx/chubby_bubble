@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:chubby_bubble/classes/corner_style.dart';
+import 'package:chubby_bubble/classes/edge_style.dart';
+import 'package:chubby_bubble/classes/panel_style.dart';
 import 'package:chubby_bubble/classes/panel_title.dart';
-import 'package:chubby_bubble/classes/style.dart';
 import 'package:chubby_bubble/common/ansi.dart';
 import 'package:dart_console/dart_console.dart';
 
 class ChubbyPanel {
-  final CornerStyle style;
+  final ChubbyPanelStyle style;
   final ChubbyPanelTitle? title;
   final String text;
   final int? width;
@@ -15,7 +17,7 @@ class ChubbyPanel {
 
   const ChubbyPanel(
     this.text, {
-    this.style = CornerStyle.round,
+    this.style = const ChubbyPanelStyle(),
     this.title,
     this.width,
     this.alignment = TextAlignment.left,
@@ -26,14 +28,12 @@ class ChubbyPanel {
 
   void _renderTitle(
     ChubbyPanelTitle title,
-    LineStyle lineStyle,
-    CornerStyle cornerStyle,
     int width,
     Console console,
   ) {
-    final LineStyle lineStyle = title.style == CornerStyle.doubled
-        ? LineStyle.doubled
-        : LineStyle.single;
+    final EdgeStyle lineStyle = title.style.cornerStyle == CornerStyle.double
+        ? EdgeStyle.double
+        : EdgeStyle.single;
 
     String vl = lineStyle.vl;
     String vr = lineStyle.vr;
@@ -41,49 +41,49 @@ class ChubbyPanel {
     String x = lineStyle.x;
     String y = lineStyle.y;
 
-    if (title.style != CornerStyle.doubled &&
-        cornerStyle == CornerStyle.doubled) {
+    if (title.style.cornerStyle != CornerStyle.double &&
+        style.cornerStyle == CornerStyle.double) {
       vl = lineStyle.ovl;
       vr = lineStyle.ovr;
 
-      x = LineStyle.doubled.x;
-      y = LineStyle.doubled.y;
+      x = EdgeStyle.double.x;
+      y = EdgeStyle.double.y;
     }
 
-    if (title.style == CornerStyle.doubled &&
-        cornerStyle != CornerStyle.doubled) {
+    if (title.style.cornerStyle == CornerStyle.double &&
+        style.cornerStyle != CornerStyle.double) {
       vl = lineStyle.ovl;
       vr = lineStyle.ovr;
 
-      x = LineStyle.single.x;
-      y = LineStyle.single.y;
+      x = EdgeStyle.single.x;
+      y = EdgeStyle.single.y;
     }
 
     // Title's top border
     _buffer.write('  ');
-    _buffer.write(title.style.tl);
+    _buffer.write(title.style.cornerStyle.tl);
     _buffer.write(lineStyle.x * (title.text.length + 2));
-    _buffer.write(title.style.tr);
+    _buffer.write(title.style.cornerStyle.tr);
     _buffer.writeln();
 
     // Title content
-    _buffer.write(style.tl);
+    _buffer.write(style.cornerStyle.tl);
     _buffer.write(x);
     _buffer.write(vl);
     _buffer.write(' ');
-    _buffer.write(title.text.color(title.color));
+    _buffer.write(title.text.color(title.style.color));
     _buffer.write(' ');
     _buffer.write(vr);
     _buffer.write(x * (width - title.text.length - 7));
-    _buffer.write(style.tr);
+    _buffer.write(style.cornerStyle.tr);
     _buffer.writeln();
 
     // Title's bottom border
     _buffer.write(y);
     _buffer.write(' ');
-    _buffer.write(title.style.bl);
+    _buffer.write(title.style.cornerStyle.bl);
     _buffer.write(lineStyle.x * (title.text.length + 2));
-    _buffer.write(title.style.br);
+    _buffer.write(title.style.cornerStyle.br);
     _buffer.write(' ' * (width - title.text.length - 7));
     _buffer.write(y);
     _buffer.writeln();
@@ -96,31 +96,33 @@ class ChubbyPanel {
     final int numberOfLines =
         _calculateNumberOfLines(finalWidth, charactersPerLine, text);
 
-    final LineStyle lineStyle = title?.style == CornerStyle.doubled
-        ? LineStyle.doubled
-        : LineStyle.single;
+    final EdgeStyle lineStyle = title?.style.cornerStyle == CornerStyle.double
+        ? EdgeStyle.double
+        : EdgeStyle.single;
 
     String x = lineStyle.x;
     String y = lineStyle.y;
 
-    if (title?.style != CornerStyle.doubled && style == CornerStyle.doubled) {
-      x = LineStyle.doubled.x;
-      y = LineStyle.doubled.y;
+    if (title?.style.cornerStyle != CornerStyle.double &&
+        style.cornerStyle == CornerStyle.double) {
+      x = EdgeStyle.double.x;
+      y = EdgeStyle.double.y;
     }
 
-    if (title?.style == CornerStyle.doubled && style != CornerStyle.doubled) {
-      x = LineStyle.single.x;
-      y = LineStyle.single.y;
+    if (title?.style.cornerStyle == CornerStyle.double &&
+        style.cornerStyle != CornerStyle.double) {
+      x = EdgeStyle.single.x;
+      y = EdgeStyle.single.y;
     }
 
     if (title != null) {
-      _renderTitle(title!, lineStyle, style, finalWidth, console);
+      _renderTitle(title!, finalWidth, console);
     }
 
     if (title == null) {
-      _buffer.write(style.tl);
+      _buffer.write(style.cornerStyle.tl);
       _buffer.write(x * (finalWidth - 2));
-      _buffer.write(style.tr);
+      _buffer.write(style.cornerStyle.tr);
       _buffer.writeln();
     }
 
@@ -143,9 +145,9 @@ class ChubbyPanel {
       _buffer.writeln();
     }
 
-    _buffer.write(style.bl);
+    _buffer.write(style.cornerStyle.bl);
     _buffer.write(x * (finalWidth - 2));
-    _buffer.write(style.br);
+    _buffer.write(style.cornerStyle.br);
     _buffer.writeln();
 
     console.write(_buffer.toString());
