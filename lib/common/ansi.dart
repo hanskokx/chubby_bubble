@@ -14,6 +14,7 @@ enum AnsiCode {
   const AnsiCode(this.value);
 }
 
+// Set text colour to an RGB value: \x1b[38;2;255;255;0m -> 38;2;r;g;b
 enum AnsiColor {
   black("\x1B[30m"),
   red("\x1B[31m"),

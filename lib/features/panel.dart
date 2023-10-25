@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chubby_bubble/classes/panel_title.dart';
 import 'package:chubby_bubble/classes/style.dart';
+import 'package:chubby_bubble/common/ansi.dart';
 import 'package:dart_console/dart_console.dart';
 
 class ChubbyPanel {
@@ -10,6 +11,7 @@ class ChubbyPanel {
   final String text;
   final int? width;
   final TextAlignment alignment;
+  final AnsiColor color;
 
   const ChubbyPanel(
     this.text, {
@@ -17,6 +19,7 @@ class ChubbyPanel {
     this.title,
     this.width,
     this.alignment = TextAlignment.left,
+    this.color = AnsiColor.brightWhite,
   });
 
   static final StringBuffer _buffer = StringBuffer();
@@ -68,7 +71,7 @@ class ChubbyPanel {
     _buffer.write(x);
     _buffer.write(vl);
     _buffer.write(' ');
-    _buffer.write(title.text);
+    _buffer.write(title.text.color(title.color));
     _buffer.write(' ');
     _buffer.write(vr);
     _buffer.write(x * (width - title.text.length - 7));
@@ -130,10 +133,12 @@ class ChubbyPanel {
 
     for (final String textLine in bodyText) {
       _buffer.write('$y ');
-      _buffer.write(textLine.alignText(
-        width: charactersPerLine,
-        alignment: alignment,
-      ));
+      _buffer.write(textLine
+          .alignText(
+            width: charactersPerLine,
+            alignment: alignment,
+          )
+          .color(color));
       _buffer.write(' $y');
       _buffer.writeln();
     }

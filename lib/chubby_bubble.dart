@@ -2,6 +2,7 @@ library chubby_bubble;
 
 import 'package:chubby_bubble/classes/panel_title.dart';
 import 'package:chubby_bubble/classes/style.dart';
+import 'package:chubby_bubble/common/ansi.dart';
 import 'package:chubby_bubble/features/panel.dart';
 import 'package:dart_console/dart_console.dart';
 
@@ -20,16 +21,19 @@ class ChubbyBubble {
     ChubbyPanelTitle? title,
     int? width,
     TextAlignment alignment = TextAlignment.left,
+    AnsiColor color = AnsiColor.brightWhite,
   }) {
     ChubbyPanel(
       text,
       alignment: alignment,
       style: style,
       width: width,
+      color: color,
       title: title != null
           ? ChubbyPanelTitle(
               title.text,
               style: title.style,
+              color: title.color,
             )
           : null,
     ).render(_console);
