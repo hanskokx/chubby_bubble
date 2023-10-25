@@ -1,4 +1,4 @@
-import 'package:chubby_bubble/classes/panel_style.dart';
+import 'package:chubby_bubble/features/panel/classes/panel_style.dart';
 
 class ChubbyPanelTitle {
   final String text;

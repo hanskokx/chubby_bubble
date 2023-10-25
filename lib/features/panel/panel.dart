@@ -1,10 +1,15 @@
 import 'dart:io';
 
-import 'package:chubby_bubble/classes/edge_style.dart';
-import 'package:chubby_bubble/classes/panel_style.dart';
-import 'package:chubby_bubble/classes/panel_title.dart';
 import 'package:chubby_bubble/common/ansi.dart';
+import 'package:chubby_bubble/features/panel/classes/edge_style.dart';
+import 'package:chubby_bubble/features/panel/classes/panel_style.dart';
+import 'package:chubby_bubble/features/panel/classes/panel_title.dart';
 import 'package:dart_console/dart_console.dart';
+
+export 'classes/corner_style.dart' show CornerStyle;
+export 'classes/edge_style.dart' show EdgeStyle;
+export 'classes/panel_style.dart' show ChubbyPanelStyle;
+export 'classes/panel_title.dart' show ChubbyPanelTitle;
 
 class ChubbyPanel {
   final ChubbyPanelStyle style;

@@ -1,6 +1,6 @@
-import 'package:chubby_bubble/classes/corner_style.dart';
-import 'package:chubby_bubble/classes/edge_style.dart';
 import 'package:chubby_bubble/common/ansi.dart';
+import 'package:chubby_bubble/features/panel/classes/corner_style.dart';
+import 'package:chubby_bubble/features/panel/classes/edge_style.dart';
 
 class ChubbyPanelStyle {
   final CornerStyle cornerStyle;

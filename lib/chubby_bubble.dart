@@ -1,17 +1,18 @@
 library chubby_bubble;
 
-import 'package:chubby_bubble/classes/panel_style.dart';
-import 'package:chubby_bubble/classes/panel_title.dart';
-import 'package:chubby_bubble/features/panel.dart';
+import 'package:chubby_bubble/features/panel/panel.dart';
 import 'package:dart_console/dart_console.dart';
 
 export 'package:dart_console/dart_console.dart' show TextAlignment;
 
-export 'classes/corner_style.dart' show CornerStyle;
-export 'classes/edge_style.dart' show EdgeStyle;
-export 'classes/panel_style.dart' show ChubbyPanelStyle;
-export 'classes/panel_title.dart' show ChubbyPanelTitle;
 export 'common/ansi.dart' show AnsiCode, AnsiColor, AnsiReset, AnsiExtension;
+export 'features/panel/panel.dart'
+    show
+        ChubbyPanel,
+        CornerStyle,
+        EdgeStyle,
+        ChubbyPanelStyle,
+        ChubbyPanelTitle;
 
 class ChubbyBubble {
   static final Console _console = Console();
