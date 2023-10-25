@@ -61,31 +61,34 @@ class ChubbyPanel {
 
     // Title's top border
     _buffer.write('  ');
-    _buffer.write(title.style.cornerStyle.tl);
-    _buffer.write(lineStyle.x * (title.text.length + 2));
-    _buffer.write(title.style.cornerStyle.tr);
+    _buffer.write(title.style.cornerStyle.tl.color(title.style.borderColor));
+    _buffer.write(
+        (lineStyle.x * (title.text.length + 2)).color(title.style.borderColor));
+    _buffer.write(title.style.cornerStyle.tr.color(title.style.borderColor));
     _buffer.writeln();
 
     // Title content
-    _buffer.write(style.cornerStyle.tl);
-    _buffer.write(x);
-    _buffer.write(vl);
+    _buffer.write(style.cornerStyle.tl.color(style.borderColor));
+    _buffer.write(x.color(style.borderColor));
+    _buffer.write(vl.color(title.style.borderColor));
     _buffer.write(' ');
-    _buffer.write(title.text.color(title.style.color));
+    _buffer.write(title.text.color(title.style.textColor));
     _buffer.write(' ');
-    _buffer.write(vr);
-    _buffer.write(x * (width - title.text.length - 7));
-    _buffer.write(style.cornerStyle.tr);
+    _buffer.write(vr.color(title.style.borderColor));
+    _buffer
+        .write((x * (width - title.text.length - 7)).color(style.borderColor));
+    _buffer.write(style.cornerStyle.tr.color(style.borderColor));
     _buffer.writeln();
 
     // Title's bottom border
-    _buffer.write(y);
+    _buffer.write(y.color(style.borderColor));
     _buffer.write(' ');
-    _buffer.write(title.style.cornerStyle.bl);
-    _buffer.write(lineStyle.x * (title.text.length + 2));
-    _buffer.write(title.style.cornerStyle.br);
+    _buffer.write(title.style.cornerStyle.bl.color(title.style.borderColor));
+    _buffer.write(
+        (lineStyle.x * (title.text.length + 2)).color(title.style.borderColor));
+    _buffer.write(title.style.cornerStyle.br.color(title.style.borderColor));
     _buffer.write(' ' * (width - title.text.length - 7));
-    _buffer.write(y);
+    _buffer.write(y.color(style.borderColor));
     _buffer.writeln();
   }
 
@@ -120,9 +123,9 @@ class ChubbyPanel {
     }
 
     if (title == null) {
-      _buffer.write(style.cornerStyle.tl);
-      _buffer.write(x * (finalWidth - 2));
-      _buffer.write(style.cornerStyle.tr);
+      _buffer.write(style.cornerStyle.tl.color(style.borderColor));
+      _buffer.write((x * (finalWidth - 2)).color(style.borderColor));
+      _buffer.write(style.cornerStyle.tr.color(style.borderColor));
       _buffer.writeln();
     }
 
@@ -134,20 +137,20 @@ class ChubbyPanel {
     }
 
     for (final String textLine in bodyText) {
-      _buffer.write('$y ');
+      _buffer.write('$y '.color(style.borderColor));
       _buffer.write(textLine
           .alignText(
             width: charactersPerLine,
             alignment: alignment,
           )
-          .color(color));
-      _buffer.write(' $y');
+          .color(style.textColor));
+      _buffer.write(' $y'.color(style.borderColor));
       _buffer.writeln();
     }
 
-    _buffer.write(style.cornerStyle.bl);
-    _buffer.write(x * (finalWidth - 2));
-    _buffer.write(style.cornerStyle.br);
+    _buffer.write(style.cornerStyle.bl.color(style.borderColor));
+    _buffer.write((x * (finalWidth - 2)).color(style.borderColor));
+    _buffer.write(style.cornerStyle.br.color(style.borderColor));
     _buffer.writeln();
 
     console.write(_buffer.toString());

@@ -5,11 +5,13 @@ import 'package:chubby_bubble/common/ansi.dart';
 class ChubbyPanelStyle {
   final CornerStyle cornerStyle;
   final EdgeStyle edgeStyle;
-  final AnsiColor color;
+  final AnsiColor textColor;
+  final AnsiColor borderColor;
 
   const ChubbyPanelStyle({
     this.cornerStyle = CornerStyle.round,
     this.edgeStyle = EdgeStyle.single,
-    this.color = AnsiColor.brightWhite,
+    this.textColor = AnsiColor.brightWhite,
+    this.borderColor = AnsiColor.brightWhite,
   });
 }
