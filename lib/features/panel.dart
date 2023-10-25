@@ -150,7 +150,9 @@ class ChubbyPanel {
       int end = (i + charactersPerLine < text.length)
           ? i + charactersPerLine
           : text.length;
-      result.add(text.substring(i, end).trim());
+      final String line = text.substring(i, end).trim();
+
+      result.add(line);
     }
     return result;
   }
