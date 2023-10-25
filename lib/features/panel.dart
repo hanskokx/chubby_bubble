@@ -25,11 +25,7 @@ class ChubbyPanel {
 
   static final StringBuffer _buffer = StringBuffer();
 
-  void _renderTitle(
-    ChubbyPanelTitle title,
-    int width,
-    Console console,
-  ) {
+  void _renderTitle(ChubbyPanelStyle style, ChubbyPanelTitle title, int width) {
     String leftConnector = title.style.edgeStyle.vl;
     String rightConnector = title.style.edgeStyle.vr;
 
@@ -79,27 +75,8 @@ class ChubbyPanel {
     final int numberOfLines =
         _calculateNumberOfLines(finalWidth, charactersPerLine, text);
 
-    // final EdgeStyle lineStyle = title?.style.cornerStyle == CornerStyle.double
-    //     ? EdgeStyle.double
-    //     : EdgeStyle.single;
-
-    // String x = lineStyle.x;
-    // String y = lineStyle.y;
-
-    // if (title?.style.cornerStyle != CornerStyle.double &&
-    //     style.cornerStyle == CornerStyle.double) {
-    //   x = EdgeStyle.double.x;
-    //   y = EdgeStyle.double.y;
-    // }
-
-    // if (title?.style.cornerStyle == CornerStyle.double &&
-    //     style.cornerStyle != CornerStyle.double) {
-    //   x = EdgeStyle.single.x;
-    //   y = EdgeStyle.single.y;
-    // }
-
     if (title != null) {
-      _renderTitle(title!, finalWidth, console);
+      _renderTitle(style, title!, finalWidth);
     }
 
     if (title == null) {
