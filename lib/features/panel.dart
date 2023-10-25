@@ -146,13 +146,37 @@ class ChubbyPanel {
 
   List<String> _splitString(String text, int charactersPerLine) {
     List<String> result = [];
-    for (int i = 0; i < text.length; i += charactersPerLine) {
-      int end = (i + charactersPerLine < text.length)
-          ? i + charactersPerLine
-          : text.length;
-      final String line = text.substring(i, end).trim();
+    final List<String> words = text.split(' ');
 
+    while (result.join(' ') != text) {
+      StringBuffer buffer = StringBuffer();
+      final List<String> processedWords = [];
+      final String line = words
+          .takeWhile((word) {
+            final int wordCount = words.length;
+            final int indexOfWord = words.indexOf(word) + 1;
+            String nextWord = '';
+
+            if (indexOfWord > wordCount) {
+              nextWord = words[indexOfWord + 1];
+            }
+
+            if ((buffer.length + word.length + nextWord.length) <=
+                charactersPerLine) {
+              buffer.write('$word ');
+              processedWords.add(word);
+              return true;
+            }
+            return false;
+          })
+          .join(' ')
+          .trim();
+      for (final String word in processedWords) {
+        words.remove(word);
+      }
+      processedWords.clear();
       result.add(line);
+      buffer.clear();
     }
     return result;
   }
