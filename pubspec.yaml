@@ -1,11 +1,9 @@
 name: chubby_bubble
 version: 0.0.1
-description: >-
-  A toolkit for building beautiful terminal user interfaces.
-  ChubbyBubble was designed to be extensive and simple to use. Presently, the
-  only available module is the [panel] module. This can be invoked using the
-  [ChubbyBubble.panel] constructor.
 repository: https://github.com/hanskokx/chubby_bubble
+description: >-
+  ChubbyBubble is a toolkit for building beautiful terminal user interfaces,
+  which was designed to be extensive and simple to use.
 environment:
   sdk: ^3.0.0
 
