@@ -65,7 +65,7 @@ extension AnsiExtension on String {
     return AnsiCode.bold.value + this + AnsiReset.bold.value;
   }
 
-  String color(AnsiColor color) {
+  String colorForeground(AnsiColor color) {
     return color.value + this + AnsiReset.all.value;
   }
 
