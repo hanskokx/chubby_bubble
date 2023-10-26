@@ -69,6 +69,15 @@ extension AnsiExtension on String {
     return color.value + this + AnsiReset.all.value;
   }
 
+  String colorBackground(AnsiColor color) {
+    final List<String> splitCode = color.value.split('[');
+    final int foregroundColor = int.parse(splitCode.last.replaceAll('m', ''));
+    final int backgroundColor = foregroundColor + 10;
+    final String backgroundColorCode = '${splitCode[0]}[${backgroundColor}m';
+
+    return backgroundColorCode + this + AnsiReset.all.value;
+  }
+
   String dim() {
     return AnsiCode.dim.value + this + AnsiReset.dim.value;
   }

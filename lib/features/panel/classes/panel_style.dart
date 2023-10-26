@@ -6,12 +6,14 @@ class ChubbyPanelStyle {
   final CornerStyle cornerStyle;
   final EdgeStyle edgeStyle;
   final AnsiColor textColor;
+  final AnsiColor backgroundColor;
   final AnsiColor borderColor;
 
   const ChubbyPanelStyle({
     this.cornerStyle = CornerStyle.round,
     this.edgeStyle = EdgeStyle.single,
     this.textColor = AnsiColor.brightWhite,
+    this.backgroundColor = AnsiColor.black,
     this.borderColor = AnsiColor.brightWhite,
   });
 }
