@@ -7,11 +7,13 @@ main(List<String> arguments) {
     alignment: TextAlignment.left,
     style: ChubbyPanelStyle(
       cornerStyle: CornerStyle.round,
+      borderColor: AnsiColor.brightGreen,
     ),
     title: ChubbyPanelTitle(
       "This panel title is actually really long. It's way longer than it should be, and it will probably break everything. Something really needs to be done about this.",
       style: ChubbyPanelStyle(
         cornerStyle: CornerStyle.round,
+        borderColor: AnsiColor.brightCyan,
       ),
     ),
   );

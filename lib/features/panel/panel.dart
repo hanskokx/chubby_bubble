@@ -40,35 +40,81 @@ class ChubbyPanel {
       rightConnector = title.style.edgeStyle.ovr;
     }
 
+    final List<String> titleText = [title.text];
+
+    // Calculate width of title card
+    final int maxTitleCardWidth = ((width * 0.8) - 8).floor();
+    final int titleTextLength = title.text.length;
+    final bool shouldSplitText = titleTextLength > maxTitleCardWidth;
+
+    if (shouldSplitText) {
+      titleText.clear();
+      titleText.addAll(_splitString(title.text, maxTitleCardWidth));
+    }
+
     // Title's top border
     _buffer.write('  ');
     _buffer.write(title.style.cornerStyle.tl.color(title.style.borderColor));
-    _buffer.write((title.style.edgeStyle.x * (title.text.length + 2))
+    _buffer.write((title.style.edgeStyle.x * (maxTitleCardWidth + 2))
         .color(title.style.borderColor));
     _buffer.write(title.style.cornerStyle.tr.color(title.style.borderColor));
     _buffer.writeln();
 
     // Title content
-    _buffer.write(style.cornerStyle.tl.color(style.borderColor));
-    _buffer.write(style.edgeStyle.x.color(style.borderColor));
-    _buffer.write(leftConnector.color(title.style.borderColor));
-    _buffer.write(' ');
-    _buffer.write(title.text.color(title.style.textColor));
-    _buffer.write(' ');
-    _buffer.write(rightConnector.color(title.style.borderColor));
-    _buffer.write((style.edgeStyle.x * (width - title.text.length - 7))
-        .color(style.borderColor));
-    _buffer.write(style.cornerStyle.tr.color(style.borderColor));
+    for (final String titleLine in titleText) {
+      if (titleText.first == titleLine) {
+        _buffer.write(style.cornerStyle.tl.color(style.borderColor));
+        _buffer.write(style.edgeStyle.x.color(style.borderColor));
+      }
+
+      if (titleText.first == titleLine && titleText.length > 1) {
+        _buffer.write('${leftConnector.color(style.borderColor)} ');
+      }
+
+      _buffer.write(
+        titleLine.color(title.style.textColor).padLeft(1).padRight(1),
+      );
+
+      final int padding = maxTitleCardWidth - titleLine.length + 1;
+      const int previousDecorationWidth = 7;
+      final int remainingWidth =
+          width - maxTitleCardWidth - previousDecorationWidth;
+
+      if (titleText.first == titleLine && titleText.length > 1) {
+        _buffer.write(' ' * padding);
+        _buffer.write(rightConnector.color(title.style.borderColor));
+        _buffer.write(
+          ((style.edgeStyle.x) * remainingWidth).color(style.borderColor),
+        );
+        _buffer.write(style.cornerStyle.tr.color(style.borderColor));
+      }
+
+      if (titleText.last != titleLine) {
+        _buffer.writeln();
+        _buffer.write(style.edgeStyle.y.color(style.borderColor));
+        _buffer.write(' ');
+        _buffer.write(title.style.edgeStyle.y.color(title.style.borderColor));
+        _buffer.write(' ');
+      }
+
+      if (titleText.first != titleLine && shouldSplitText) {
+        _buffer.write(' ' * padding);
+        _buffer.write(title.style.edgeStyle.y.color(title.style.borderColor));
+        _buffer.write(' ' * remainingWidth);
+        _buffer.write(title.style.edgeStyle.y.color(style.borderColor));
+      }
+    }
+
     _buffer.writeln();
 
     // Title's bottom border
     _buffer.write(style.edgeStyle.y.color(style.borderColor));
     _buffer.write(' ');
     _buffer.write(title.style.cornerStyle.bl.color(title.style.borderColor));
-    _buffer.write((title.style.edgeStyle.x * (title.text.length + 2))
+    _buffer.write((title.style.edgeStyle.x * (maxTitleCardWidth + 2))
         .color(title.style.borderColor));
     _buffer.write(title.style.cornerStyle.br.color(title.style.borderColor));
-    _buffer.write(' ' * (width - title.text.length - 7));
+    _buffer.write(' ' * (width - maxTitleCardWidth - 7));
     _buffer.write(style.edgeStyle.y.color(style.borderColor));
     _buffer.writeln();
   }
