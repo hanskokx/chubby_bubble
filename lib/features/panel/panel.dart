@@ -79,13 +79,12 @@ class ChubbyPanel {
 
     // Title content
     for (final String titleLine in titleText) {
-      _buffer.write(' ' * panelPadding);
-
       final int textIndex = titleText.indexOf(titleLine);
       final bool isFirstLine = textIndex == 0;
       final bool isLastLine = textIndex == titleText.length - 1;
 
       if (isFirstLine) {
+        _buffer.write(' ' * panelPadding);
         _buffer.write(style.cornerStyle.tl.colorForeground(style.borderColor));
 
         _buffer.write(
@@ -146,6 +145,8 @@ class ChubbyPanel {
 
       if (!isLastLine && shouldSplitText) {
         _buffer.writeln();
+
+        _buffer.write(' ' * panelPadding);
         _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
 
         _buffer.write(
@@ -171,7 +172,6 @@ class ChubbyPanel {
         _buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
       }
     }
-
     _buffer.writeln();
 
     // Title's bottom border
