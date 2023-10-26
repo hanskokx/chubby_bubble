@@ -5,7 +5,7 @@ import 'package:dart_console/dart_console.dart';
 
 export 'package:dart_console/dart_console.dart' show TextAlignment;
 
-export 'common/ansi.dart' show AnsiCode, AnsiColor, AnsiReset, AnsiExtension;
+export 'common/ansi.dart' show AnsiStyle, AnsiColor, AnsiExtension;
 export 'features/panel/panel.dart'
     show
         ChubbyPanel,

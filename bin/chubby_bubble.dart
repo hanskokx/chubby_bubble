@@ -7,32 +7,28 @@ main(List<String> arguments) {
     alignment: TextAlignment.left,
     style: ChubbyPanelStyle(
       cornerStyle: CornerStyle.round,
-      borderColor: AnsiColor.brightGreen,
-      backgroundColor: AnsiColor.brightBlue,
     ),
     title: ChubbyPanelTitle(
-      "This panel title is actually really long.",
+      "ChubbyBubble",
       style: ChubbyPanelStyle(
         cornerStyle: CornerStyle.round,
-        borderColor: AnsiColor.brightCyan,
-        backgroundColor: AnsiColor.brightYellow,
       ),
     ),
   );
 
-  ChubbyBubble.panel(
-    'Left align panel with square corners and a title with doubled corners',
-    alignment: TextAlignment.left,
-    style: ChubbyPanelStyle(
-      cornerStyle: CornerStyle.square,
-    ),
-    title: ChubbyPanelTitle(
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet consectetur adipiscing elit. Risus quis varius quam quisque id. Tempus iaculis urna id volutpat lacus laoreet non curabitur. Aliquam ultrices sagittis orci a scelerisque purus semper eget. At ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget. Adipiscing at in tellus integer feugiat scelerisque varius morbi. Nulla aliquet enim tortor at auctor urna nunc id. Elementum pulvinar etiam non quam lacus. Tempor orci eu lobortis elementum nibh tellus molestie. Nullam ac tortor vitae purus faucibus ornare suspendisse sed. Phasellus faucibus scelerisque eleifend donec pretium. Tellus cras adipiscing enim eu turpis egestas pretium.",
-      style: ChubbyPanelStyle(
-        cornerStyle: CornerStyle.double,
-      ),
-    ),
-  );
+  // ChubbyBubble.panel(
+  //   'Left align panel with square corners and a title with doubled corners',
+  //   alignment: TextAlignment.left,
+  //   style: ChubbyPanelStyle(
+  //     cornerStyle: CornerStyle.square,
+  //   ),
+  //   title: ChubbyPanelTitle(
+  //     "ChubbyBubble",
+  //     style: ChubbyPanelStyle(
+  //       cornerStyle: CornerStyle.double,
+  //     ),
+  //   ),
+  // );
 
   // ChubbyBubble.panel(
   //   'Left align panel with doubled corners and a title with square corners',

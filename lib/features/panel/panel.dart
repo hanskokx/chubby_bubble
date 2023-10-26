@@ -79,13 +79,38 @@ class ChubbyPanel {
         _buffer.write(' '.colorBackground(title.style.backgroundColor));
       }
 
-      _buffer.write(
-        titleLine
-            .colorForeground(title.style.textColor)
-            .padLeft(1)
-            .padRight(1)
-            .colorBackground(title.style.backgroundColor),
-      );
+      String line = titleLine
+          .colorForeground(title.style.textColor)
+          .padLeft(1)
+          .padRight(1)
+          .colorBackground(title.style.backgroundColor);
+
+      final bool bold =
+          title.style.textStyle?.contains(AnsiStyle.bold) ?? false;
+      final bool dim = title.style.textStyle?.contains(AnsiStyle.dim) ?? false;
+      final bool italic =
+          title.style.textStyle?.contains(AnsiStyle.italic) ?? false;
+      final bool underline =
+          title.style.textStyle?.contains(AnsiStyle.underline) ?? false;
+      final bool blinking =
+          title.style.textStyle?.contains(AnsiStyle.blinking) ?? false;
+      final bool inverse =
+          title.style.textStyle?.contains(AnsiStyle.inverse) ?? false;
+      final bool invisible =
+          title.style.textStyle?.contains(AnsiStyle.invisible) ?? false;
+      final bool strikethrough =
+          title.style.textStyle?.contains(AnsiStyle.strikethrough) ?? false;
+
+      if (bold) line = line.bold();
+      if (dim) line = line.dim();
+      if (italic) line = line.italic();
+      if (underline) line = line.underline();
+      if (blinking) line = line.blinking();
+      if (inverse) line = line.inverse();
+      if (invisible) line = line.invisible();
+      if (strikethrough) line = line.strikethrough();
+
+      _buffer.write(line);
 
       final int padding = maxTitleCardWidth - titleLine.length + 1;
       const int previousDecorationWidth = 7;
@@ -180,13 +205,40 @@ class ChubbyPanel {
     for (final String textLine in bodyText) {
       _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
       _buffer.write(' '.colorBackground(style.backgroundColor));
-      _buffer.write(textLine
+
+      String line = textLine
           .alignText(
             width: charactersPerLine,
             alignment: alignment,
           )
           .colorForeground(style.textColor)
-          .colorBackground(style.backgroundColor));
+          .colorBackground(style.backgroundColor);
+
+      final bool bold = style.textStyle?.contains(AnsiStyle.bold) ?? false;
+      final bool dim = style.textStyle?.contains(AnsiStyle.dim) ?? false;
+      final bool italic = style.textStyle?.contains(AnsiStyle.italic) ?? false;
+      final bool underline =
+          style.textStyle?.contains(AnsiStyle.underline) ?? false;
+      final bool blinking =
+          style.textStyle?.contains(AnsiStyle.blinking) ?? false;
+      final bool inverse =
+          style.textStyle?.contains(AnsiStyle.inverse) ?? false;
+      final bool invisible =
+          style.textStyle?.contains(AnsiStyle.invisible) ?? false;
+      final bool strikethrough =
+          style.textStyle?.contains(AnsiStyle.strikethrough) ?? false;
+
+      if (bold) line = line.bold();
+      if (dim) line = line.dim();
+      if (italic) line = line.italic();
+      if (underline) line = line.underline();
+      if (blinking) line = line.blinking();
+      if (inverse) line = line.inverse();
+      if (invisible) line = line.invisible();
+      if (strikethrough) line = line.strikethrough();
+
+      _buffer.write(line);
+
       _buffer.write(' '.colorBackground(style.backgroundColor));
       _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
       _buffer.writeln();

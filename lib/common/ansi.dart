@@ -1,4 +1,4 @@
-enum AnsiCode {
+enum AnsiStyle {
   bold("\x1B[1m"),
   dim("\x1B[2m"),
   italic("\x1B[3m"),
@@ -11,7 +11,7 @@ enum AnsiCode {
 
   final String value;
 
-  const AnsiCode(this.value);
+  const AnsiStyle(this.value);
 }
 
 // Set text colour to an RGB value: \x1b[38;2;255;255;0m -> 38;2;r;g;b
@@ -58,18 +58,21 @@ enum AnsiReset {
 
 extension AnsiExtension on String {
   String blinking() {
-    return AnsiCode.blinking.value + this + AnsiReset.blinking.value;
+    return AnsiStyle.blinking.value + this + AnsiReset.blinking.value;
   }
 
   String bold() {
-    return AnsiCode.bold.value + this + AnsiReset.bold.value;
+    return AnsiStyle.bold.value + this + AnsiReset.bold.value;
   }
 
-  String colorForeground(AnsiColor color) {
+  String colorForeground(AnsiColor? color) {
+    if (color == null) return this;
     return color.value + this + AnsiReset.all.value;
   }
 
-  String colorBackground(AnsiColor color) {
+  String colorBackground(AnsiColor? color) {
+    if (color == null) return this;
+
     final List<String> splitCode = color.value.split('[');
     final int foregroundColor = int.parse(splitCode.last.replaceAll('m', ''));
     final int backgroundColor = foregroundColor + 10;
@@ -79,26 +82,26 @@ extension AnsiExtension on String {
   }
 
   String dim() {
-    return AnsiCode.dim.value + this + AnsiReset.dim.value;
+    return AnsiStyle.dim.value + this + AnsiReset.dim.value;
   }
 
   String inverse() {
-    return AnsiCode.inverse.value + this + AnsiReset.inverse.value;
+    return AnsiStyle.inverse.value + this + AnsiReset.inverse.value;
   }
 
   String invisible() {
-    return AnsiCode.invisible.value + this + AnsiReset.invisible.value;
+    return AnsiStyle.invisible.value + this + AnsiReset.invisible.value;
   }
 
   String italic() {
-    return AnsiCode.italic.value + this + AnsiReset.italic.value;
+    return AnsiStyle.italic.value + this + AnsiReset.italic.value;
   }
 
   String strikethrough() {
-    return AnsiCode.strikethrough.value + this + AnsiReset.strikethrough.value;
+    return AnsiStyle.strikethrough.value + this + AnsiReset.strikethrough.value;
   }
 
   String underline() {
-    return AnsiCode.underline.value + this + AnsiReset.underline.value;
+    return AnsiStyle.underline.value + this + AnsiReset.underline.value;
   }
 }
