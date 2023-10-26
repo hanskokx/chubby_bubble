@@ -24,10 +24,34 @@ export 'features/panel/panel.dart'
         ChubbyPanelTheme,
         ChubbyPanelTitle;
 
+/// The main entry-point to [ChubbyBubble]. Use the named constructor(s) to
+/// generate available objects and render them to the console.
 class ChubbyBubble {
   static final Console _console = Console();
+
   const ChubbyBubble._();
 
+  /// Creates a new [ChubbyPanel] and renders it to the console.
+  ///
+  /// # Rquired
+  ///
+  /// - `[String]`: The body text of the panel.
+  ///
+  /// # Optional
+  ///
+  /// - `[TextAlign] alignment`: Aligns the text within the panel. Has no effect
+  /// if [width] is not specified.
+  ///
+  ///   - `TextAlign.left` (default): Aligns the panel to the left side
+  ///   - `TextAlign.center`: Centers the panel within the available space
+  ///   - `TextAlign.right`: Aligns the panel to the right side
+  ///
+  /// - `[ChubbyPanelTheme] theme`: Contains styling options for the edges and
+  /// corners of the panel, as well as the background and border colors. This is
+  /// also where you will find options for styling the text.
+  ///
+  /// - `[int] width`: Specify the maximum width of the panel. If no width is
+  /// specified, the full console width is used.
   static void panel(
     String text, {
     ChubbyPanelTheme theme = const ChubbyPanelTheme(),
@@ -38,7 +62,7 @@ class ChubbyBubble {
     ChubbyPanel(
       text,
       alignment: alignment,
-      style: theme,
+      theme: theme,
       width: width,
       title: title != null
           ? ChubbyPanelTitle(
