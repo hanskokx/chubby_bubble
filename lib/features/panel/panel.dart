@@ -1,18 +1,19 @@
 import 'dart:io';
 
 import 'package:chubby_bubble/common/ansi.dart';
+import 'package:chubby_bubble/common/text_style.dart';
 import 'package:chubby_bubble/features/panel/classes/edge_style.dart';
-import 'package:chubby_bubble/features/panel/classes/panel_style.dart';
+import 'package:chubby_bubble/features/panel/classes/panel_theme.dart';
 import 'package:chubby_bubble/features/panel/classes/panel_title.dart';
 import 'package:dart_console/dart_console.dart';
 
 export 'classes/corner_style.dart' show CornerStyle;
 export 'classes/edge_style.dart' show EdgeStyle;
-export 'classes/panel_style.dart' show ChubbyPanelStyle;
+export 'classes/panel_theme.dart' show ChubbyPanelTheme;
 export 'classes/panel_title.dart' show ChubbyPanelTitle;
 
 class ChubbyPanel {
-  final ChubbyPanelStyle style;
+  final ChubbyPanelTheme style;
   final ChubbyPanelTitle? title;
   final String text;
   final int? width;
@@ -21,7 +22,7 @@ class ChubbyPanel {
 
   const ChubbyPanel(
     this.text, {
-    this.style = const ChubbyPanelStyle(),
+    this.style = const ChubbyPanelTheme(),
     this.title,
     this.width,
     this.alignment = TextAlignment.left,
@@ -30,14 +31,16 @@ class ChubbyPanel {
 
   static final StringBuffer _buffer = StringBuffer();
 
-  void _renderTitle(ChubbyPanelStyle style, ChubbyPanelTitle title, int width) {
-    String leftConnector = title.style.edgeStyle.vl;
-    String rightConnector = title.style.edgeStyle.vr;
+  void _renderTitle(ChubbyPanelTheme style, ChubbyPanelTitle title, int width) {
+    final ChubbyTextStyle? titleTextStyle = title.theme.textStyle;
+
+    String leftConnector = title.theme.edgeStyle.vl;
+    String rightConnector = title.theme.edgeStyle.vr;
 
     if (style.edgeStyle != EdgeStyle.double &&
-        title.style.edgeStyle == EdgeStyle.double) {
-      leftConnector = title.style.edgeStyle.ovl;
-      rightConnector = title.style.edgeStyle.ovr;
+        title.theme.edgeStyle == EdgeStyle.double) {
+      leftConnector = title.theme.edgeStyle.ovl;
+      rightConnector = title.theme.edgeStyle.ovr;
     }
 
     final List<String> titleText = [title.text];
@@ -59,11 +62,11 @@ class ChubbyPanel {
     // Title's top border
     _buffer.write('  ');
     _buffer.write(
-        title.style.cornerStyle.tl.colorForeground(title.style.borderColor));
-    _buffer.write((title.style.edgeStyle.x * (maxTitleCardWidth + 2))
-        .colorForeground(title.style.borderColor));
+        title.theme.cornerStyle.tl.colorForeground(title.theme.borderColor));
+    _buffer.write((title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
+        .colorForeground(title.theme.borderColor));
     _buffer.write(
-        title.style.cornerStyle.tr.colorForeground(title.style.borderColor));
+        title.theme.cornerStyle.tr.colorForeground(title.theme.borderColor));
     _buffer.writeln();
 
     // Title content
@@ -76,39 +79,23 @@ class ChubbyPanel {
         _buffer.write(style.cornerStyle.tl.colorForeground(style.borderColor));
         _buffer.write(style.edgeStyle.x.colorForeground(style.borderColor));
         _buffer.write(leftConnector.colorForeground(style.borderColor));
-        _buffer.write(' '.colorBackground(title.style.backgroundColor));
+        _buffer.write(' '.colorBackground(title.theme.backgroundColor));
       }
 
       String line = titleLine
-          .colorForeground(title.style.textColor)
+          .colorForeground(titleTextStyle?.color)
           .padLeft(1)
           .padRight(1)
-          .colorBackground(title.style.backgroundColor);
+          .colorBackground(title.theme.backgroundColor);
 
-      final bool bold =
-          title.style.textStyle?.contains(AnsiStyle.bold) ?? false;
-      final bool dim = title.style.textStyle?.contains(AnsiStyle.dim) ?? false;
-      final bool italic =
-          title.style.textStyle?.contains(AnsiStyle.italic) ?? false;
-      final bool underline =
-          title.style.textStyle?.contains(AnsiStyle.underline) ?? false;
-      final bool blinking =
-          title.style.textStyle?.contains(AnsiStyle.blinking) ?? false;
-      final bool inverse =
-          title.style.textStyle?.contains(AnsiStyle.inverse) ?? false;
-      final bool invisible =
-          title.style.textStyle?.contains(AnsiStyle.invisible) ?? false;
-      final bool strikethrough =
-          title.style.textStyle?.contains(AnsiStyle.strikethrough) ?? false;
-
-      if (bold) line = line.bold();
-      if (dim) line = line.dim();
-      if (italic) line = line.italic();
-      if (underline) line = line.underline();
-      if (blinking) line = line.blinking();
-      if (inverse) line = line.inverse();
-      if (invisible) line = line.invisible();
-      if (strikethrough) line = line.strikethrough();
+      if (titleTextStyle?.bold ?? false) line = line.bold();
+      if (titleTextStyle?.dim ?? false) line = line.dim();
+      if (titleTextStyle?.italic ?? false) line = line.italic();
+      if (titleTextStyle?.underline ?? false) line = line.underline();
+      if (titleTextStyle?.blinking ?? false) line = line.blinking();
+      if (titleTextStyle?.inverse ?? false) line = line.inverse();
+      if (titleTextStyle?.invisible ?? false) line = line.invisible();
+      if (titleTextStyle?.strikethrough ?? false) line = line.strikethrough();
 
       _buffer.write(line);
 
@@ -119,8 +106,8 @@ class ChubbyPanel {
 
       if (isFirstLine && shouldSplitText) {
         _buffer.write(
-            (' ' * padding).colorBackground(title.style.backgroundColor));
-        _buffer.write(rightConnector.colorForeground(title.style.borderColor));
+            (' ' * padding).colorBackground(title.theme.backgroundColor));
+        _buffer.write(rightConnector.colorForeground(title.theme.borderColor));
         _buffer.write(
           ((style.edgeStyle.x) * remainingWidth)
               .colorForeground(style.borderColor),
@@ -130,13 +117,13 @@ class ChubbyPanel {
 
       if (!isFirstLine && shouldSplitText) {
         _buffer.write(
-            (' ' * padding).colorBackground(title.style.backgroundColor));
+            (' ' * padding).colorBackground(title.theme.backgroundColor));
         _buffer.write(
-            title.style.edgeStyle.y.colorForeground(title.style.borderColor));
+            title.theme.edgeStyle.y.colorForeground(title.theme.borderColor));
         _buffer.write(
             (' ' * remainingWidth).colorBackground(style.backgroundColor));
         _buffer
-            .write(title.style.edgeStyle.y.colorForeground(style.borderColor));
+            .write(title.theme.edgeStyle.y.colorForeground(style.borderColor));
       }
 
       if (!isLastLine && shouldSplitText) {
@@ -144,15 +131,15 @@ class ChubbyPanel {
         _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
         _buffer.write(' '.colorBackground(style.backgroundColor));
         _buffer.write(
-            title.style.edgeStyle.y.colorForeground(title.style.borderColor));
-        _buffer.write(' '.colorBackground(title.style.backgroundColor));
+            title.theme.edgeStyle.y.colorForeground(title.theme.borderColor));
+        _buffer.write(' '.colorBackground(title.theme.backgroundColor));
       }
 
       if (isFirstLine && !shouldSplitText) {
         _buffer.write(
-            (' ' * padding).colorBackground(title.style.backgroundColor));
+            (' ' * padding).colorBackground(title.theme.backgroundColor));
         _buffer.write(
-            title.style.edgeStyle.y.colorForeground(title.style.borderColor));
+            title.theme.edgeStyle.y.colorForeground(title.theme.borderColor));
         _buffer.write((style.edgeStyle.x * remainingWidth)
             .colorForeground(style.borderColor));
         _buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
@@ -165,11 +152,11 @@ class ChubbyPanel {
     _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
     _buffer.write(' '.colorBackground(style.backgroundColor));
     _buffer.write(
-        title.style.cornerStyle.bl.colorForeground(title.style.borderColor));
-    _buffer.write((title.style.edgeStyle.x * (maxTitleCardWidth + 2))
-        .colorForeground(title.style.borderColor));
+        title.theme.cornerStyle.bl.colorForeground(title.theme.borderColor));
+    _buffer.write((title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
+        .colorForeground(title.theme.borderColor));
     _buffer.write(
-        title.style.cornerStyle.br.colorForeground(title.style.borderColor));
+        title.theme.cornerStyle.br.colorForeground(title.theme.borderColor));
     _buffer.write((' ' * (width - maxTitleCardWidth - 7))
         .colorBackground(style.backgroundColor));
     _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
@@ -211,31 +198,17 @@ class ChubbyPanel {
             width: charactersPerLine,
             alignment: alignment,
           )
-          .colorForeground(style.textColor)
+          .colorForeground(style.textStyle?.color)
           .colorBackground(style.backgroundColor);
 
-      final bool bold = style.textStyle?.contains(AnsiStyle.bold) ?? false;
-      final bool dim = style.textStyle?.contains(AnsiStyle.dim) ?? false;
-      final bool italic = style.textStyle?.contains(AnsiStyle.italic) ?? false;
-      final bool underline =
-          style.textStyle?.contains(AnsiStyle.underline) ?? false;
-      final bool blinking =
-          style.textStyle?.contains(AnsiStyle.blinking) ?? false;
-      final bool inverse =
-          style.textStyle?.contains(AnsiStyle.inverse) ?? false;
-      final bool invisible =
-          style.textStyle?.contains(AnsiStyle.invisible) ?? false;
-      final bool strikethrough =
-          style.textStyle?.contains(AnsiStyle.strikethrough) ?? false;
-
-      if (bold) line = line.bold();
-      if (dim) line = line.dim();
-      if (italic) line = line.italic();
-      if (underline) line = line.underline();
-      if (blinking) line = line.blinking();
-      if (inverse) line = line.inverse();
-      if (invisible) line = line.invisible();
-      if (strikethrough) line = line.strikethrough();
+      if (style.textStyle?.bold ?? false) line = line.bold();
+      if (style.textStyle?.dim ?? false) line = line.dim();
+      if (style.textStyle?.italic ?? false) line = line.italic();
+      if (style.textStyle?.underline ?? false) line = line.underline();
+      if (style.textStyle?.blinking ?? false) line = line.blinking();
+      if (style.textStyle?.inverse ?? false) line = line.inverse();
+      if (style.textStyle?.invisible ?? false) line = line.invisible();
+      if (style.textStyle?.strikethrough ?? false) line = line.strikethrough();
 
       _buffer.write(line);
 

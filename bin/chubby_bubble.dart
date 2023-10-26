@@ -5,12 +5,13 @@ main(List<String> arguments) {
   ChubbyBubble.panel(
     'Left align panel with rounded corners and a title with rounded corners',
     alignment: TextAlignment.left,
-    style: ChubbyPanelStyle(
+    theme: ChubbyPanelTheme(
       cornerStyle: CornerStyle.round,
+      textStyle: ChubbyTextStyle(),
     ),
     title: ChubbyPanelTitle(
       "ChubbyBubble",
-      style: ChubbyPanelStyle(
+      theme: ChubbyPanelTheme(
         cornerStyle: CornerStyle.round,
       ),
     ),
