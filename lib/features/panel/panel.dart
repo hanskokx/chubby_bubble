@@ -62,11 +62,15 @@ class ChubbyPanel {
     // Title's top border
     _buffer.write('  ');
     _buffer.write(
-        title.theme.cornerStyle.tl.colorForeground(title.theme.borderColor));
-    _buffer.write((title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
-        .colorForeground(title.theme.borderColor));
+      title.theme.cornerStyle.tl.colorForeground(title.theme.borderColor),
+    );
     _buffer.write(
-        title.theme.cornerStyle.tr.colorForeground(title.theme.borderColor));
+      (title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
+          .colorForeground(title.theme.borderColor),
+    );
+    _buffer.write(
+      title.theme.cornerStyle.tr.colorForeground(title.theme.borderColor),
+    );
     _buffer.writeln();
 
     // Title content
@@ -106,7 +110,8 @@ class ChubbyPanel {
 
       if (isFirstLine && shouldSplitText) {
         _buffer.write(
-            (' ' * padding).colorBackground(title.theme.backgroundColor));
+          (' ' * padding).colorBackground(title.theme.backgroundColor),
+        );
         _buffer.write(rightConnector.colorForeground(title.theme.borderColor));
         _buffer.write(
           ((style.edgeStyle.x) * remainingWidth)
@@ -117,11 +122,14 @@ class ChubbyPanel {
 
       if (!isFirstLine && shouldSplitText) {
         _buffer.write(
-            (' ' * padding).colorBackground(title.theme.backgroundColor));
+          (' ' * padding).colorBackground(title.theme.backgroundColor),
+        );
         _buffer.write(
-            title.theme.edgeStyle.y.colorForeground(title.theme.borderColor));
+          title.theme.edgeStyle.y.colorForeground(title.theme.borderColor),
+        );
         _buffer.write(
-            (' ' * remainingWidth).colorBackground(style.backgroundColor));
+          (' ' * remainingWidth).colorBackground(style.backgroundColor),
+        );
         _buffer
             .write(title.theme.edgeStyle.y.colorForeground(style.borderColor));
       }
@@ -131,17 +139,22 @@ class ChubbyPanel {
         _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
         _buffer.write(' '.colorBackground(style.backgroundColor));
         _buffer.write(
-            title.theme.edgeStyle.y.colorForeground(title.theme.borderColor));
+          title.theme.edgeStyle.y.colorForeground(title.theme.borderColor),
+        );
         _buffer.write(' '.colorBackground(title.theme.backgroundColor));
       }
 
       if (isFirstLine && !shouldSplitText) {
         _buffer.write(
-            (' ' * padding).colorBackground(title.theme.backgroundColor));
+          (' ' * padding).colorBackground(title.theme.backgroundColor),
+        );
         _buffer.write(
-            title.theme.edgeStyle.y.colorForeground(title.theme.borderColor));
-        _buffer.write((style.edgeStyle.x * remainingWidth)
-            .colorForeground(style.borderColor));
+          title.theme.edgeStyle.y.colorForeground(title.theme.borderColor),
+        );
+        _buffer.write(
+          (style.edgeStyle.x * remainingWidth)
+              .colorForeground(style.borderColor),
+        );
         _buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
       }
     }
@@ -152,13 +165,19 @@ class ChubbyPanel {
     _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
     _buffer.write(' '.colorBackground(style.backgroundColor));
     _buffer.write(
-        title.theme.cornerStyle.bl.colorForeground(title.theme.borderColor));
-    _buffer.write((title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
-        .colorForeground(title.theme.borderColor));
+      title.theme.cornerStyle.bl.colorForeground(title.theme.borderColor),
+    );
     _buffer.write(
-        title.theme.cornerStyle.br.colorForeground(title.theme.borderColor));
-    _buffer.write((' ' * (width - maxTitleCardWidth - 7))
-        .colorBackground(style.backgroundColor));
+      (title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
+          .colorForeground(title.theme.borderColor),
+    );
+    _buffer.write(
+      title.theme.cornerStyle.br.colorForeground(title.theme.borderColor),
+    );
+    _buffer.write(
+      (' ' * (width - maxTitleCardWidth - 7))
+          .colorBackground(style.backgroundColor),
+    );
     _buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
     _buffer.writeln();
   }
@@ -176,8 +195,10 @@ class ChubbyPanel {
 
     if (title == null) {
       _buffer.write(style.cornerStyle.tl.colorForeground(style.borderColor));
-      _buffer.write((style.edgeStyle.x * (finalWidth - 2))
-          .colorForeground(style.borderColor));
+      _buffer.write(
+        (style.edgeStyle.x * (finalWidth - 2))
+            .colorForeground(style.borderColor),
+      );
       _buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
       _buffer.writeln();
     }
@@ -218,8 +239,9 @@ class ChubbyPanel {
     }
 
     _buffer.write(style.cornerStyle.bl.colorForeground(style.borderColor));
-    _buffer.write((style.edgeStyle.x * (finalWidth - 2))
-        .colorForeground(style.borderColor));
+    _buffer.write(
+      (style.edgeStyle.x * (finalWidth - 2)).colorForeground(style.borderColor),
+    );
     _buffer.write(style.cornerStyle.br.colorForeground(style.borderColor));
     _buffer.writeln();
 
@@ -256,11 +278,11 @@ class ChubbyPanel {
   }
 
   List<String> _splitString(String text, int charactersPerLine) {
-    List<String> result = [];
+    final List<String> result = [];
     final List<String> words = text.split(' ');
 
     while (result.join(' ') != text) {
-      StringBuffer buffer = StringBuffer();
+      final StringBuffer buffer = StringBuffer();
       final List<String> processedWords = [];
       final String line = words
           .takeWhile((word) {
