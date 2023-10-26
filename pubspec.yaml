@@ -17,3 +17,4 @@ dev_dependencies:
 platforms:
   windows:
   linux:
+  macos:
