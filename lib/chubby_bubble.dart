@@ -1,3 +1,12 @@
+// Copyright (c) 2023, the ChubbyBubble project authors.  Please see the AUTHORS
+// file for details. All rights reserved. Use of this source code is governed by
+// a BSD-style license that can be found in the LICENSE file.
+
+/// A toolkit for building beautiful terminal user interfaces.
+///
+/// ChubbyBubble was designed to be extensive and simple to use. Presently, the
+/// only available module is the [panel] module. This can be invoked using the
+/// [ChubbyBubble.panel] constructor.
 library chubby_bubble;
 
 import 'package:chubby_bubble/features/panel/panel.dart';
