@@ -9,7 +9,7 @@
 /// [ChubbyBubble.panel] constructor.
 library chubby_bubble;
 
-import 'package:chubby_bubble/features/panel/panel.dart';
+import 'package:chubby_bubble/common/widget.dart';
 import 'package:dart_console/dart_console.dart';
 
 export 'package:dart_console/dart_console.dart' show TextAlignment;
@@ -28,48 +28,15 @@ export 'features/panel/panel.dart'
 /// generate available objects and render them to the console.
 class ChubbyBubble {
   static final Console _console = Console();
+  static final StringBuffer _buffer = StringBuffer();
 
-  const ChubbyBubble._();
+  const ChubbyBubble(this.child);
 
-  /// Creates a new [ChubbyPanel] and renders it to the console.
-  ///
-  /// # Rquired
-  ///
-  /// - `[String]`: The body text of the panel.
-  ///
-  /// # Optional
-  ///
-  /// - `[TextAlign] alignment`: Aligns the text within the panel. Has no effect
-  /// if [width] is not specified.
-  ///
-  ///   - `TextAlign.left` (default): Aligns the panel to the left side
-  ///   - `TextAlign.center`: Centers the panel within the available space
-  ///   - `TextAlign.right`: Aligns the panel to the right side
-  ///
-  /// - `[ChubbyPanelTheme] theme`: Contains styling options for the edges and
-  /// corners of the panel, as well as the background and border colors. This is
-  /// also where you will find options for styling the text.
-  ///
-  /// - `[int] width`: Specify the maximum width of the panel. If no width is
-  /// specified, the full console width is used.
-  static void panel(
-    String text, {
-    ChubbyPanelTheme theme = const ChubbyPanelTheme(),
-    ChubbyPanelTitle? title,
-    int? width,
-    TextAlignment alignment = TextAlignment.left,
-  }) {
-    ChubbyPanel(
-      text,
-      alignment: alignment,
-      theme: theme,
-      width: width,
-      title: title != null
-          ? ChubbyPanelTitle(
-              title.text,
-              theme: title.theme,
-            )
-          : null,
-    ).render(_console);
+  final ChubbyWidget child;
+
+  void render() {
+    child.render(_buffer);
+    _console.write(_buffer.toString());
+    _buffer.clear();
   }
 }
