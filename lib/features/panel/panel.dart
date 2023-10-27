@@ -297,6 +297,7 @@ class ChubbyPanel implements ChubbyWidget {
       final int remainingSpace = finalWidth - givenWidth - panelPadding;
       buffer.write((' ' * remainingSpace).colorBackground(backgroundColor));
       if (isChild) {
+        // FIXME: This calculation is wrong. It's causing the child panel to have the wrong remaining space
         buffer.write(
           (' ' * (finalWidth - parentPadding - panelPadding))
               .colorBackground(parentTheme!.backgroundColor),
@@ -304,7 +305,12 @@ class ChubbyPanel implements ChubbyWidget {
         buffer.write(
           parentTheme.edgeStyle.y.colorForeground(parentTheme.borderColor),
         );
+        buffer.write(
+          (' ' * (finalWidth - parentPadding - panelPadding))
+              .colorBackground(AnsiColor.green),
+        );
       }
+      // TODO: Calculate remaining space
 
       buffer.writeln();
     }
