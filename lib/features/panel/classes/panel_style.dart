@@ -3,14 +3,14 @@ import 'package:chubby_bubble/common/text_style.dart';
 import 'package:chubby_bubble/features/panel/classes/corner_style.dart';
 import 'package:chubby_bubble/features/panel/classes/edge_style.dart';
 
-class ChubbyPanelTheme {
+class ChubbyPanelStyle {
   final CornerStyle cornerStyle;
   final EdgeStyle edgeStyle;
   final AnsiColor? backgroundColor;
   final AnsiColor? borderColor;
   final ChubbyTextStyle? textStyle;
 
-  const ChubbyPanelTheme({
+  const ChubbyPanelStyle({
     this.cornerStyle = CornerStyle.round,
     this.edgeStyle = EdgeStyle.single,
     this.backgroundColor,

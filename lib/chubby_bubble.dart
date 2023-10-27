@@ -9,6 +9,9 @@
 /// [ChubbyBubble.panel] constructor.
 library chubby_bubble;
 
+import 'dart:io';
+
+import 'package:chubby_bubble/common/ansi.dart';
 import 'package:chubby_bubble/common/widget.dart';
 import 'package:dart_console/dart_console.dart';
 
@@ -21,7 +24,7 @@ export 'features/panel/panel.dart'
         ChubbyPanel,
         CornerStyle,
         EdgeStyle,
-        ChubbyPanelTheme,
+        ChubbyPanelStyle,
         ChubbyPanelTitle;
 
 /// The main entry-point to [ChubbyBubble]. Use the named constructor(s) to
@@ -30,12 +33,18 @@ class ChubbyBubble {
   static final Console _console = Console();
   static final StringBuffer _buffer = StringBuffer();
 
-  const ChubbyBubble(this.child);
+  const ChubbyBubble({required this.child, this.backgroundColor});
 
   final ChubbyWidget child;
+  final AnsiColor? backgroundColor;
 
   void render() {
-    child.render(_buffer);
+    final int consoleWidthIncludingPanel = stdout.terminalColumns - 4;
+    child.render(
+      _buffer,
+      consoleWidthIncludingPanel,
+      backgroundColor: backgroundColor,
+    );
     _console.write(_buffer.toString());
     _buffer.clear();
   }

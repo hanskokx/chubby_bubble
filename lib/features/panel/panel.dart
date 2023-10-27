@@ -6,21 +6,23 @@ import 'package:dart_console/dart_console.dart';
 
 export 'classes/corner_style.dart' show CornerStyle;
 export 'classes/edge_style.dart' show EdgeStyle;
-export 'classes/panel_theme.dart' show ChubbyPanelTheme;
+export 'classes/panel_style.dart' show ChubbyPanelStyle;
 export 'classes/panel_title.dart' show ChubbyPanelTitle;
 
 class ChubbyPanel implements ChubbyWidget {
-  final ChubbyPanelTheme theme;
+  final ChubbyPanelStyle style;
   final ChubbyPanelTitle? title;
+
+  @override
   final String text;
   final int? width;
   final TextAlignment alignment;
   final AnsiColor? color;
   final ChubbyWidget? child;
 
-  const ChubbyPanel(
-    this.text, {
-    this.theme = const ChubbyPanelTheme(),
+  const ChubbyPanel({
+    required this.text,
+    this.style = const ChubbyPanelStyle(),
     this.title,
     this.width,
     this.alignment = TextAlignment.left,
@@ -30,19 +32,21 @@ class ChubbyPanel implements ChubbyWidget {
 
   void _renderTitle(
     StringBuffer buffer,
-    ChubbyPanelTheme style,
+    ChubbyPanelStyle style,
     ChubbyPanelTitle title,
     int width,
-    int panelPadding,
-  ) {
-    final ChubbyTextStyle? titleTextStyle = title.theme.textStyle;
-    String leftConnector = title.theme.edgeStyle.vl;
-    String rightConnector = title.theme.edgeStyle.vr;
+    int consoleWidth,
+    int panelPadding, {
+    AnsiColor? backgroundColor,
+  }) {
+    final ChubbyTextStyle? titleTextStyle = title.style.textStyle;
+    String leftConnector = title.style.edgeStyle.vl;
+    String rightConnector = title.style.edgeStyle.vr;
 
     if (style.edgeStyle != EdgeStyle.double &&
-        title.theme.edgeStyle == EdgeStyle.double) {
-      leftConnector = title.theme.edgeStyle.ovl;
-      rightConnector = title.theme.edgeStyle.ovr;
+        title.style.edgeStyle == EdgeStyle.double) {
+      leftConnector = title.style.edgeStyle.ovl;
+      rightConnector = title.style.edgeStyle.ovr;
     }
 
     final List<String> titleText = [title.text];
@@ -62,16 +66,22 @@ class ChubbyPanel implements ChubbyWidget {
     }
 
     // Title's top border
-    buffer.write('  ');
+    buffer.write('  '.colorBackground(backgroundColor));
     buffer.write(
-      title.theme.cornerStyle.tl.colorForeground(title.theme.borderColor),
+      title.style.cornerStyle.tl.colorForeground(title.style.borderColor),
     );
     buffer.write(
-      (title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
-          .colorForeground(title.theme.borderColor),
+      (title.style.edgeStyle.x * (maxTitleCardWidth + 2))
+          .colorForeground(title.style.borderColor),
     );
     buffer.write(
-      title.theme.cornerStyle.tr.colorForeground(title.theme.borderColor),
+      title.style.cornerStyle.tr.colorForeground(title.style.borderColor),
+    );
+
+    final int remainingSpace = consoleWidth - width - panelPadding;
+    buffer.write(
+      (' ' * (remainingSpace + panelPadding + maxTitleCardWidth + 8))
+          .colorBackground(backgroundColor),
     );
     buffer.writeln();
 
@@ -82,21 +92,25 @@ class ChubbyPanel implements ChubbyWidget {
       final bool isLastLine = textIndex == titleText.length - 1;
 
       if (isFirstLine) {
-        buffer.write(' ' * panelPadding);
-        buffer.write(style.cornerStyle.tl.colorForeground(style.borderColor));
+        buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+        buffer.write(
+          style.cornerStyle.tl.colorForeground(style.borderColor),
+        );
 
         buffer.write(
           style.edgeStyle.x.colorForeground(style.borderColor),
         );
-        buffer.write(leftConnector.colorForeground(style.borderColor));
-        buffer.write(' '.colorBackground(title.theme.backgroundColor));
+        buffer.write(
+          leftConnector.colorForeground(style.borderColor),
+        );
+        buffer.write(' '.colorBackground(title.style.backgroundColor));
       }
 
       String line = titleLine
           .colorForeground(titleTextStyle?.color)
           .padLeft(1)
           .padRight(1)
-          .colorBackground(title.theme.backgroundColor);
+          .colorBackground(title.style.backgroundColor);
 
       if (titleTextStyle?.bold ?? false) line = line.bold();
       if (titleTextStyle?.dim ?? false) line = line.dim();
@@ -116,9 +130,9 @@ class ChubbyPanel implements ChubbyWidget {
 
       if (isFirstLine && shouldSplitText) {
         buffer.write(
-          (' ' * padding).colorBackground(title.theme.backgroundColor),
+          (' ' * padding).colorBackground(title.style.backgroundColor),
         );
-        buffer.write(rightConnector.colorForeground(title.theme.borderColor));
+        buffer.write(rightConnector.colorForeground(title.style.borderColor));
 
         buffer.write(
           ((style.edgeStyle.x) * remainingWidth)
@@ -129,39 +143,39 @@ class ChubbyPanel implements ChubbyWidget {
 
       if (!isFirstLine && shouldSplitText) {
         buffer.write(
-          (' ' * padding).colorBackground(title.theme.backgroundColor),
+          (' ' * padding).colorBackground(title.style.backgroundColor),
         );
         buffer.write(
-          title.theme.edgeStyle.y.colorForeground(title.theme.borderColor),
+          title.style.edgeStyle.y.colorForeground(title.style.borderColor),
         );
         buffer.write(
           (' ' * remainingWidth).colorBackground(style.backgroundColor),
         );
         buffer
-            .write(title.theme.edgeStyle.y.colorForeground(style.borderColor));
+            .write(title.style.edgeStyle.y.colorForeground(style.borderColor));
       }
 
       if (!isLastLine && shouldSplitText) {
         buffer.writeln();
 
-        buffer.write(' ' * panelPadding);
+        buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
         buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
 
         buffer.write(
           ' '.colorBackground(style.backgroundColor),
         );
         buffer.write(
-          title.theme.edgeStyle.y.colorForeground(title.theme.borderColor),
+          title.style.edgeStyle.y.colorForeground(title.style.borderColor),
         );
-        buffer.write(' '.colorBackground(title.theme.backgroundColor));
+        buffer.write(' '.colorBackground(title.style.backgroundColor));
       }
 
       if (isFirstLine && !shouldSplitText) {
         buffer.write(
-          (' ' * padding).colorBackground(title.theme.backgroundColor),
+          (' ' * padding).colorBackground(title.style.backgroundColor),
         );
         buffer.write(
-          title.theme.edgeStyle.y.colorForeground(title.theme.borderColor),
+          title.style.edgeStyle.y.colorForeground(title.style.borderColor),
         );
         buffer.write(
           (style.edgeStyle.x * remainingWidth)
@@ -169,49 +183,69 @@ class ChubbyPanel implements ChubbyWidget {
         );
         buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
       }
+
+      buffer.write(
+        (' ' * remainingSpace).colorBackground(backgroundColor),
+      );
     }
+
     buffer.writeln();
 
     // Title's bottom border
-    buffer.write(' ' * panelPadding);
+    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
     buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
     buffer.write(
       ' '.colorBackground(style.backgroundColor),
     );
     buffer.write(
-      title.theme.cornerStyle.bl.colorForeground(title.theme.borderColor),
+      title.style.cornerStyle.bl.colorForeground(title.style.borderColor),
     );
     buffer.write(
-      (title.theme.edgeStyle.x * (maxTitleCardWidth + 2))
-          .colorForeground(title.theme.borderColor),
+      (title.style.edgeStyle.x * (maxTitleCardWidth + 2))
+          .colorForeground(title.style.borderColor),
     );
     buffer.write(
-      title.theme.cornerStyle.br.colorForeground(title.theme.borderColor),
+      title.style.cornerStyle.br.colorForeground(title.style.borderColor),
     );
     buffer.write(
       (' ' * (width - maxTitleCardWidth - 7))
           .colorBackground(style.backgroundColor),
     );
     buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
+    buffer.write(
+      (' ' * remainingSpace).colorBackground(backgroundColor),
+    );
     buffer.writeln();
   }
 
-  void _renderNoTitle(StringBuffer buffer, int finalWidth) {
-    buffer.write(theme.cornerStyle.tl.colorForeground(theme.borderColor));
+  void _renderNoTitle(
+    StringBuffer buffer,
+    int finalWidth, {
+    AnsiColor? backgroundColor,
+  }) {
+    buffer.write(style.cornerStyle.tl.colorForeground(style.borderColor));
     buffer.write(
-      (theme.edgeStyle.x * (finalWidth - 2)).colorForeground(theme.borderColor),
+      (style.edgeStyle.x * (finalWidth - 2)).colorForeground(style.borderColor),
     );
-    buffer.write(theme.cornerStyle.tr.colorForeground(theme.borderColor));
+    buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
     buffer.writeln();
   }
 
   void _renderBodyText(
     StringBuffer buffer,
+    int charactersPerLine,
     int givenWidth,
     int finalWidth,
-    int panelPadding,
-  ) {
-    final int charactersPerLine = _calculateCharactersPerLine(finalWidth, text);
+    int panelPadding, {
+    required bool isChild,
+    ChubbyPanelStyle? parentTheme,
+    int parentPadding = 0,
+    AnsiColor? backgroundColor,
+  }) {
+    assert(isChild == (parentTheme != null));
+
+    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+
     final int numberOfLines =
         _calculateNumberOfLines(finalWidth, charactersPerLine, text);
 
@@ -222,32 +256,53 @@ class ChubbyPanel implements ChubbyWidget {
       bodyText.add(text);
     }
 
+    if (isChild) {
+      buffer.write(' ' * parentPadding);
+      buffer.write(
+        parentTheme!.edgeStyle.y.colorForeground(parentTheme.borderColor),
+      );
+      buffer.write(' '.colorBackground(parentTheme.backgroundColor));
+    }
+
     for (final String textLine in bodyText) {
-      buffer.write(' ' * panelPadding);
-      buffer.write(theme.edgeStyle.y.colorForeground(theme.borderColor));
-      buffer.write(' '.colorBackground(theme.backgroundColor));
+      buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+      buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
+      buffer.write(' '.colorBackground(style.backgroundColor));
 
       String line = textLine
           .alignText(
             width: charactersPerLine,
-            alignment: theme.textStyle?.alignment ?? TextAlignment.left,
+            alignment: style.textStyle?.alignment ?? TextAlignment.left,
           )
-          .colorForeground(theme.textStyle?.color)
-          .colorBackground(theme.backgroundColor);
+          .colorForeground(style.textStyle?.color)
+          .colorBackground(style.backgroundColor);
 
-      if (theme.textStyle?.bold ?? false) line = line.bold();
-      if (theme.textStyle?.dim ?? false) line = line.dim();
-      if (theme.textStyle?.italic ?? false) line = line.italic();
-      if (theme.textStyle?.underline ?? false) line = line.underline();
-      if (theme.textStyle?.blinking ?? false) line = line.blinking();
-      if (theme.textStyle?.inverse ?? false) line = line.inverse();
-      if (theme.textStyle?.invisible ?? false) line = line.invisible();
-      if (theme.textStyle?.strikethrough ?? false) line = line.strikethrough();
+      if (style.textStyle?.bold ?? false) line = line.bold();
+      if (style.textStyle?.dim ?? false) line = line.dim();
+      if (style.textStyle?.italic ?? false) line = line.italic();
+      if (style.textStyle?.underline ?? false) line = line.underline();
+      if (style.textStyle?.blinking ?? false) line = line.blinking();
+      if (style.textStyle?.inverse ?? false) line = line.inverse();
+      if (style.textStyle?.invisible ?? false) line = line.invisible();
+      if (style.textStyle?.strikethrough ?? false) line = line.strikethrough();
 
       buffer.write(line);
 
-      buffer.write(' '.colorBackground(theme.backgroundColor));
-      buffer.write(theme.edgeStyle.y.colorForeground(theme.borderColor));
+      buffer.write(' '.colorBackground(style.backgroundColor));
+      buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
+
+      final int remainingSpace = finalWidth - givenWidth - panelPadding;
+      buffer.write((' ' * remainingSpace).colorBackground(backgroundColor));
+      if (isChild) {
+        buffer.write(
+          (' ' * (finalWidth - parentPadding - panelPadding))
+              .colorBackground(parentTheme!.backgroundColor),
+        );
+        buffer.write(
+          parentTheme.edgeStyle.y.colorForeground(parentTheme.borderColor),
+        );
+      }
+
       buffer.writeln();
     }
   }
@@ -259,30 +314,46 @@ class ChubbyPanel implements ChubbyWidget {
   ) {
     buffer.write(' ' * panelPadding);
 
-    buffer.write(theme.cornerStyle.bl.colorForeground(theme.borderColor));
+    buffer.write(style.cornerStyle.bl.colorForeground(style.borderColor));
     buffer.write(
-      (theme.edgeStyle.x * (finalWidth - 2)).colorForeground(theme.borderColor),
+      (style.edgeStyle.x * (finalWidth - 2)).colorForeground(style.borderColor),
     );
-    buffer.write(theme.cornerStyle.br.colorForeground(theme.borderColor));
+    buffer.write(style.cornerStyle.br.colorForeground(style.borderColor));
     buffer.writeln();
   }
 
   void _renderChild(
     StringBuffer buffer,
     int panelPadding,
+    int parentWidth,
+    ChubbyPanelStyle parentTheme,
     ChubbyWidget? child,
   ) {
     if (child == null) return;
     buffer.write(' ' * panelPadding);
-    // FIXME: Why are you broken?
-    child.render(buffer);
-    buffer.writeln();
+    buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
+    buffer.write(' '.colorBackground(style.backgroundColor));
+
+    child.render(
+      buffer,
+      parentWidth - (child.text?.length ?? 0) - 8,
+      isChild: true,
+      parentTheme: parentTheme,
+      parentPadding: panelPadding,
+    );
   }
 
   @override
-  void render(StringBuffer buffer) {
-    final int givenWidth = width ?? stdout.terminalColumns;
-    final int finalWidth = _calculatePanelWidth(givenWidth, text);
+  void render(
+    StringBuffer buffer,
+    int consoleWidth, {
+    bool isChild = false,
+    ChubbyPanelStyle parentTheme = const ChubbyPanelStyle(),
+    int parentPadding = 0,
+    AnsiColor? backgroundColor,
+  }) {
+    final int finalWidth = width ?? consoleWidth;
+    final int charactersPerLine = _calculateCharactersPerLine(finalWidth, text);
 
     int panelPadding = 0;
 
@@ -290,50 +361,62 @@ class ChubbyPanel implements ChubbyWidget {
       case TextAlignment.left:
         break;
       case TextAlignment.center:
-        panelPadding = ((givenWidth - finalWidth) / 2).floor();
+        panelPadding = ((consoleWidth - finalWidth) / 2).ceil();
         break;
       case TextAlignment.right:
-        panelPadding = givenWidth - finalWidth;
+        panelPadding = consoleWidth - finalWidth;
         break;
     }
 
-    buffer.write(' ' * panelPadding);
+    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
 
     if (title != null) {
       _renderTitle(
         buffer,
-        theme,
+        style,
         title!,
         finalWidth,
+        consoleWidth,
         panelPadding,
+        backgroundColor: backgroundColor,
       );
     }
 
     if (title == null) {
-      _renderNoTitle(buffer, finalWidth);
+      _renderNoTitle(buffer, finalWidth, backgroundColor: backgroundColor);
     }
 
-    _renderBodyText(buffer, givenWidth, finalWidth, panelPadding);
-    _renderChild(buffer, panelPadding, ChubbyPanel('Hello', width: finalWidth));
+    _renderBodyText(
+      buffer,
+      charactersPerLine,
+      finalWidth,
+      consoleWidth,
+      panelPadding,
+      isChild: isChild,
+      parentTheme: parentTheme,
+      parentPadding: parentPadding,
+      backgroundColor: backgroundColor,
+    );
+    if (isChild) {
+      buffer.write(' ' * (panelPadding + parentPadding));
+      buffer.write(
+        parentTheme.edgeStyle.y.colorForeground(parentTheme.borderColor),
+      );
+      buffer.write(' ');
+    }
+    _renderChild(
+      buffer,
+      panelPadding,
+      finalWidth - 4,
+      parentTheme,
+      child,
+    );
     _renderPanelFooter(buffer, panelPadding, finalWidth);
   }
 
   int _calculateNumberOfLines(int width, int charactersPerLine, String text) {
     if ((text.length % width).ceil() > width) return 1;
     return (text.length / width).ceil();
-  }
-
-  int _calculatePanelWidth(int width, String text) {
-    final int consoleWidthIncludingPanel = stdout.terminalColumns - 4;
-
-    int calculatedWidth = consoleWidthIncludingPanel;
-
-    calculatedWidth = width;
-    if (consoleWidthIncludingPanel < width) {
-      calculatedWidth = consoleWidthIncludingPanel;
-    }
-
-    return calculatedWidth;
   }
 
   int _calculateCharactersPerLine(int width, String text) {

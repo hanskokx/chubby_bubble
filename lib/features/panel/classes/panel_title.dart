@@ -1,11 +1,11 @@
-import 'package:chubby_bubble/features/panel/classes/panel_theme.dart';
+import 'package:chubby_bubble/features/panel/classes/panel_style.dart';
 
 class ChubbyPanelTitle {
   final String text;
-  final ChubbyPanelTheme theme;
+  final ChubbyPanelStyle style;
 
   const ChubbyPanelTitle(
     this.text, {
-    this.theme = const ChubbyPanelTheme(),
+    this.style = const ChubbyPanelStyle(),
   });
 }
