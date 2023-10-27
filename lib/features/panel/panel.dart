@@ -220,6 +220,8 @@ class ChubbyPanel implements ChubbyWidget {
 
   void _renderNoTitle(
     StringBuffer buffer,
+    int consoleWidth,
+    int panelPadding,
     int finalWidth, {
     AnsiColor? backgroundColor,
   }) {
@@ -228,6 +230,9 @@ class ChubbyPanel implements ChubbyWidget {
       (style.edgeStyle.x * (finalWidth - 2)).colorForeground(style.borderColor),
     );
     buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
+
+    final int remainingSpace = consoleWidth - finalWidth - panelPadding;
+    buffer.write((' ' * remainingSpace).colorBackground(backgroundColor));
     buffer.writeln();
   }
 
@@ -245,7 +250,7 @@ class ChubbyPanel implements ChubbyWidget {
     assert(isChild == (parentTheme != null));
 
     final int numberOfLines =
-        _calculateNumberOfLines(finalWidth, charactersPerLine, text);
+        _calculateNumberOfLines(givenWidth, charactersPerLine, text);
 
     final List<String> bodyText = [];
     if (numberOfLines > 1) {
@@ -284,7 +289,7 @@ class ChubbyPanel implements ChubbyWidget {
       if (style.textStyle?.invisible ?? false) line = line.invisible();
       if (style.textStyle?.strikethrough ?? false) line = line.strikethrough();
 
-      buffer.write(line);
+      buffer.write(line.colorBackground(style.backgroundColor));
 
       buffer.write(' '.colorBackground(style.backgroundColor));
       buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
@@ -307,16 +312,21 @@ class ChubbyPanel implements ChubbyWidget {
 
   void _renderPanelFooter(
     StringBuffer buffer,
+    int consoleWidth,
     int panelPadding,
-    int finalWidth,
-  ) {
-    buffer.write(' ' * panelPadding);
+    int finalWidth, {
+    AnsiColor? backgroundColor,
+  }) {
+    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
 
     buffer.write(style.cornerStyle.bl.colorForeground(style.borderColor));
     buffer.write(
       (style.edgeStyle.x * (finalWidth - 2)).colorForeground(style.borderColor),
     );
     buffer.write(style.cornerStyle.br.colorForeground(style.borderColor));
+
+    final int remainingSpace = consoleWidth - finalWidth - panelPadding;
+    buffer.write((' ' * remainingSpace).colorBackground(backgroundColor));
     buffer.writeln();
   }
 
@@ -325,19 +335,21 @@ class ChubbyPanel implements ChubbyWidget {
     int panelPadding,
     int parentWidth,
     ChubbyPanelStyle parentTheme,
-    ChubbyWidget? child,
-  ) {
+    ChubbyWidget? child, {
+    AnsiColor? backgroundColor,
+  }) {
     if (child == null) return;
-    buffer.write(' ' * panelPadding);
+    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
     buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
     buffer.write(' '.colorBackground(style.backgroundColor));
 
     child.render(
       buffer,
-      parentWidth - (child.text?.length ?? 0) - 8,
+      parentWidth - panelPadding,
       isChild: true,
       parentTheme: parentTheme,
       parentPadding: panelPadding,
+      backgroundColor: backgroundColor,
     );
   }
 
@@ -352,7 +364,6 @@ class ChubbyPanel implements ChubbyWidget {
   }) {
     final int finalWidth = width ?? consoleWidth;
     final int charactersPerLine = _calculateCharactersPerLine(finalWidth, text);
-
     int panelPadding = 0;
 
     switch (alignment) {
@@ -381,7 +392,13 @@ class ChubbyPanel implements ChubbyWidget {
     }
 
     if (title == null) {
-      _renderNoTitle(buffer, finalWidth, backgroundColor: backgroundColor);
+      _renderNoTitle(
+        buffer,
+        consoleWidth,
+        panelPadding,
+        finalWidth,
+        backgroundColor: backgroundColor,
+      );
     }
 
     _renderBodyText(
@@ -408,8 +425,15 @@ class ChubbyPanel implements ChubbyWidget {
       finalWidth - 4,
       parentTheme,
       child,
+      backgroundColor: backgroundColor,
     );
-    _renderPanelFooter(buffer, panelPadding, finalWidth);
+    _renderPanelFooter(
+      buffer,
+      consoleWidth,
+      panelPadding,
+      finalWidth,
+      backgroundColor: backgroundColor,
+    );
   }
 
   int _calculateNumberOfLines(int width, int charactersPerLine, String text) {
