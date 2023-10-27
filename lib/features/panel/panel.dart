@@ -278,15 +278,15 @@ class ChubbyPanel implements ChubbyWidget {
       if (isChild) {
         // FIXME: This calculation is wrong. It's causing the child panel to have the wrong remaining space
         buffer.write(
-          (' ' * (finalWidth - parentPadding - panelPadding))
+          (' ' *
+                  (finalWidth -
+                      charactersPerLine -
+                      parentPadding -
+                      panelPadding))
               .colorBackground(parentTheme!.backgroundColor),
         );
         buffer.write(
           parentTheme.edgeStyle.y.colorForeground(parentTheme.borderColor),
-        );
-        buffer.write(
-          (' ' * (finalWidth - parentPadding - panelPadding))
-              .colorBackground(AnsiColor.green),
         );
       }
 
@@ -401,7 +401,7 @@ class ChubbyPanel implements ChubbyWidget {
     _renderChild(
       buffer,
       panelPadding,
-      finalWidth - 4,
+      charactersPerLine,
       parentTheme,
       child,
     );
