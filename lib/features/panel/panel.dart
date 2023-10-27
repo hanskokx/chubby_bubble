@@ -244,8 +244,6 @@ class ChubbyPanel implements ChubbyWidget {
   }) {
     assert(isChild == (parentTheme != null));
 
-    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
-
     final int numberOfLines =
         _calculateNumberOfLines(finalWidth, charactersPerLine, text);
 
