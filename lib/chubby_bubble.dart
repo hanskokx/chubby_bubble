@@ -11,7 +11,6 @@ library chubby_bubble;
 
 import 'dart:io';
 
-import 'package:chubby_bubble/common/ansi.dart';
 import 'package:chubby_bubble/common/widget.dart';
 import 'package:dart_console/dart_console.dart';
 
@@ -33,17 +32,15 @@ class ChubbyBubble {
   static final Console _console = Console();
   static final StringBuffer _buffer = StringBuffer();
 
-  const ChubbyBubble({required this.child, this.backgroundColor});
+  const ChubbyBubble({required this.child});
 
   final ChubbyWidget child;
-  final AnsiColor? backgroundColor;
 
   void render() {
     final int consoleWidthIncludingPanel = stdout.terminalColumns - 4;
     child.render(
       _buffer,
       consoleWidthIncludingPanel,
-      backgroundColor: backgroundColor,
     );
     _console.write(_buffer.toString());
     _buffer.clear();

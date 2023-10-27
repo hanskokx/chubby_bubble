@@ -35,10 +35,8 @@ class ChubbyPanel implements ChubbyWidget {
     ChubbyPanelStyle style,
     ChubbyPanelTitle title,
     int width,
-    int consoleWidth,
-    int panelPadding, {
-    AnsiColor? backgroundColor,
-  }) {
+    int panelPadding,
+  ) {
     final ChubbyTextStyle? titleTextStyle = title.style.textStyle;
     String leftConnector = title.style.edgeStyle.vl;
     String rightConnector = title.style.edgeStyle.vr;
@@ -66,7 +64,7 @@ class ChubbyPanel implements ChubbyWidget {
     }
 
     // Title's top border
-    buffer.write('  '.colorBackground(backgroundColor));
+    buffer.write('  ');
     buffer.write(
       title.style.cornerStyle.tl.colorForeground(title.style.borderColor),
     );
@@ -78,11 +76,6 @@ class ChubbyPanel implements ChubbyWidget {
       title.style.cornerStyle.tr.colorForeground(title.style.borderColor),
     );
 
-    final int remainingSpace = consoleWidth - width - panelPadding;
-    buffer.write(
-      (' ' * (remainingSpace + panelPadding + maxTitleCardWidth + 8))
-          .colorBackground(backgroundColor),
-    );
     buffer.writeln();
 
     // Title content
@@ -92,7 +85,7 @@ class ChubbyPanel implements ChubbyWidget {
       final bool isLastLine = textIndex == titleText.length - 1;
 
       if (isFirstLine) {
-        buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+        buffer.write(' ' * panelPadding);
         buffer.write(
           style.cornerStyle.tl.colorForeground(style.borderColor),
         );
@@ -158,7 +151,7 @@ class ChubbyPanel implements ChubbyWidget {
       if (!isLastLine && shouldSplitText) {
         buffer.writeln();
 
-        buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+        buffer.write(' ' * panelPadding);
         buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
 
         buffer.write(
@@ -183,16 +176,12 @@ class ChubbyPanel implements ChubbyWidget {
         );
         buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
       }
-
-      buffer.write(
-        (' ' * remainingSpace).colorBackground(backgroundColor),
-      );
     }
 
     buffer.writeln();
 
     // Title's bottom border
-    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+    buffer.write(' ' * panelPadding);
     buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
     buffer.write(
       ' '.colorBackground(style.backgroundColor),
@@ -212,31 +201,24 @@ class ChubbyPanel implements ChubbyWidget {
           .colorBackground(style.backgroundColor),
     );
     buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
-    buffer.write(
-      (' ' * remainingSpace).colorBackground(backgroundColor),
-    );
+
     buffer.writeln();
   }
 
   void _renderNoTitle(
     StringBuffer buffer,
-    int consoleWidth,
-    int panelPadding,
-    int finalWidth, {
-    AnsiColor? backgroundColor,
-  }) {
+    int finalWidth,
+  ) {
     buffer.write(style.cornerStyle.tl.colorForeground(style.borderColor));
     buffer.write(
       (style.edgeStyle.x * (finalWidth - 2)).colorForeground(style.borderColor),
     );
     buffer.write(style.cornerStyle.tr.colorForeground(style.borderColor));
 
-    final int remainingSpace = consoleWidth - finalWidth - panelPadding;
-    buffer.write((' ' * remainingSpace).colorBackground(backgroundColor));
     buffer.writeln();
   }
 
-  void _renderBodyText(
+  void _renderBody(
     StringBuffer buffer,
     int charactersPerLine,
     int givenWidth,
@@ -245,7 +227,6 @@ class ChubbyPanel implements ChubbyWidget {
     required bool isChild,
     ChubbyPanelStyle? parentTheme,
     int parentPadding = 0,
-    AnsiColor? backgroundColor,
   }) {
     assert(isChild == (parentTheme != null));
 
@@ -268,7 +249,7 @@ class ChubbyPanel implements ChubbyWidget {
     }
 
     for (final String textLine in bodyText) {
-      buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+      buffer.write(' ' * panelPadding);
       buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
       buffer.write(' '.colorBackground(style.backgroundColor));
 
@@ -294,8 +275,6 @@ class ChubbyPanel implements ChubbyWidget {
       buffer.write(' '.colorBackground(style.backgroundColor));
       buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
 
-      final int remainingSpace = finalWidth - givenWidth - panelPadding;
-      buffer.write((' ' * remainingSpace).colorBackground(backgroundColor));
       if (isChild) {
         // FIXME: This calculation is wrong. It's causing the child panel to have the wrong remaining space
         buffer.write(
@@ -310,7 +289,6 @@ class ChubbyPanel implements ChubbyWidget {
               .colorBackground(AnsiColor.green),
         );
       }
-      // TODO: Calculate remaining space
 
       buffer.writeln();
     }
@@ -320,10 +298,9 @@ class ChubbyPanel implements ChubbyWidget {
     StringBuffer buffer,
     int consoleWidth,
     int panelPadding,
-    int finalWidth, {
-    AnsiColor? backgroundColor,
-  }) {
-    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+    int finalWidth,
+  ) {
+    buffer.write(' ' * panelPadding);
 
     buffer.write(style.cornerStyle.bl.colorForeground(style.borderColor));
     buffer.write(
@@ -332,7 +309,7 @@ class ChubbyPanel implements ChubbyWidget {
     buffer.write(style.cornerStyle.br.colorForeground(style.borderColor));
 
     final int remainingSpace = consoleWidth - finalWidth - panelPadding;
-    buffer.write((' ' * remainingSpace).colorBackground(backgroundColor));
+    buffer.write(' ' * remainingSpace);
     buffer.writeln();
   }
 
@@ -341,12 +318,16 @@ class ChubbyPanel implements ChubbyWidget {
     int panelPadding,
     int parentWidth,
     ChubbyPanelStyle parentTheme,
-    ChubbyWidget? child, {
-    AnsiColor? backgroundColor,
-  }) {
+    ChubbyWidget? child,
+  ) {
     if (child == null) return;
-    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
-    buffer.write(style.edgeStyle.y.colorForeground(style.borderColor));
+    // Parent panel's left padding
+    buffer.write(' ' * panelPadding);
+    // Parent panel's left edge
+    buffer.write(
+      style.edgeStyle.y.colorForeground(style.borderColor),
+    );
+    // Parent panel's background
     buffer.write(' '.colorBackground(style.backgroundColor));
 
     child.render(
@@ -355,7 +336,6 @@ class ChubbyPanel implements ChubbyWidget {
       isChild: true,
       parentTheme: parentTheme,
       parentPadding: panelPadding,
-      backgroundColor: backgroundColor,
     );
   }
 
@@ -366,7 +346,6 @@ class ChubbyPanel implements ChubbyWidget {
     bool isChild = false,
     ChubbyPanelStyle parentTheme = const ChubbyPanelStyle(),
     int parentPadding = 0,
-    AnsiColor? backgroundColor,
   }) {
     final int finalWidth = width ?? consoleWidth;
     final int charactersPerLine = _calculateCharactersPerLine(finalWidth, text);
@@ -383,31 +362,25 @@ class ChubbyPanel implements ChubbyWidget {
         break;
     }
 
-    buffer.write((' ' * panelPadding).colorBackground(backgroundColor));
+    // Left padding before the top of the panel
+    buffer.write(' ' * panelPadding);
 
-    if (title != null) {
+    if (title == null) {
+      _renderNoTitle(
+        buffer,
+        finalWidth,
+      );
+    } else {
       _renderTitle(
         buffer,
         style,
         title!,
         finalWidth,
-        consoleWidth,
         panelPadding,
-        backgroundColor: backgroundColor,
       );
     }
 
-    if (title == null) {
-      _renderNoTitle(
-        buffer,
-        consoleWidth,
-        panelPadding,
-        finalWidth,
-        backgroundColor: backgroundColor,
-      );
-    }
-
-    _renderBodyText(
+    _renderBody(
       buffer,
       charactersPerLine,
       finalWidth,
@@ -416,8 +389,8 @@ class ChubbyPanel implements ChubbyWidget {
       isChild: isChild,
       parentTheme: parentTheme,
       parentPadding: parentPadding,
-      backgroundColor: backgroundColor,
     );
+
     if (isChild) {
       buffer.write(' ' * (panelPadding + parentPadding));
       buffer.write(
@@ -431,18 +404,17 @@ class ChubbyPanel implements ChubbyWidget {
       finalWidth - 4,
       parentTheme,
       child,
-      backgroundColor: backgroundColor,
     );
     _renderPanelFooter(
       buffer,
       consoleWidth,
       panelPadding,
       finalWidth,
-      backgroundColor: backgroundColor,
     );
   }
 
   int _calculateNumberOfLines(int width, int charactersPerLine, String text) {
+    if (width == 0) width = stdout.terminalColumns;
     if ((text.length % width).ceil() > width) return 1;
     return (text.length / width).ceil();
   }
