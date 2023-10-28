@@ -40,6 +40,8 @@ int main(List<String> arguments) {
       title: ChubbyPanelTitle(
         'Hello, ChubbyBubble',
         style: ChubbyPanelStyle(
+          cornerStyle: CornerStyle.none,
+          edgeStyle: EdgeStyle.none,
           backgroundColor: AnsiColor.brightMagenta,
           textStyle: ChubbyTextStyle(
             bold: true,

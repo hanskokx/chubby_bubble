@@ -72,7 +72,9 @@ enum EdgeStyle {
   /// - ovl: ╡
   /// - vr: ├
   /// - ovr: ╞
-  single('─', '│', '┤', '╡', '├', '╞');
+  single('─', '│', '┤', '╡', '├', '╞'),
+  none(' ', ' ', ' ', ' ', ' ', ' '),
+  ;
 
   /// The horizontal (x-axis) line segment.
   final String x;

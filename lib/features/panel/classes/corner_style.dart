@@ -32,8 +32,10 @@
 ///
 enum CornerStyle {
   double('╔', '╗', '╚', '╝'),
+  none(' ', ' ', ' ', ' '),
   round('╭', '╮', '╰', '╯'),
-  square('┌', '┐', '└', '┘');
+  square('┌', '┐', '└', '┘'),
+  ;
 
   final String tl;
   final String tr;
