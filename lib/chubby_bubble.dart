@@ -10,14 +10,18 @@
 library;
 
 import 'package:chubby_bubble/features/panel/panel.dart';
+import 'package:chubby_bubble/features/spinner/spinner.dart';
+import 'package:chubby_bubble/features/spinner/styles/spinner_styles.dart';
 import 'package:dart_console/dart_console.dart';
 
 export 'package:dart_console/dart_console.dart' show TextAlignment;
 
-export 'common/ansi.dart' show AnsiStyle, AnsiColor, AnsiExtension;
+export 'common/ansi.dart' show AnsiStyle, AnsiColor, AnsiExtension, AnsiCursor, AnsiReset;
 export 'common/text_style.dart' show ChubbyTextStyle;
 export 'features/panel/panel.dart'
     show ChubbyPanel, CornerStyle, EdgeStyle, ChubbyPanelTheme, ChubbyPanelTitle;
+export 'features/spinner/spinner.dart' show Spinner;
+export 'features/spinner/styles/spinner_styles.dart' show SpinnerStyle;
 
 /// The main entry-point to [ChubbyBubble]. Use the named constructor(s) to
 /// generate available objects and render them to the console.
@@ -66,5 +70,9 @@ class ChubbyBubble {
             )
           : null,
     ).render(_console);
+  }
+
+  static void spinner({SpinnerStyle? style}) {
+    Spinner(style: style).render(_console);
   }
 }

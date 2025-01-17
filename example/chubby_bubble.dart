@@ -1,4 +1,5 @@
 import 'package:chubby_bubble/chubby_bubble.dart';
+import 'package:chubby_bubble/features/spinner/styles/spinner_styles.dart';
 
 int main(List<String> arguments) {
   // Panel with title
@@ -223,17 +224,19 @@ int main(List<String> arguments) {
   //   ),
   // );
 
-  ChubbyBubble.panel(
-    'Takimata no consectetuer dolor iriure dolore. Takimata sea luptatum euismod dolor eu dolore eirmod tation nonumy aliquyam. Ipsum eirmod erat tempor sadipscing ipsum dolore et sed sea diam stet aliquyam possim eleifend no gubergren. Rebum gubergren mazim dolore et commodo magna ipsum rebum luptatum blandit et. Ut clita diam suscipit dolor erat dolore hendrerit sadipscing nostrud erat et lorem magna sit rebum. Dolore ipsum diam dolor no sed feugiat et takimata dolore lorem sed tation sit dignissim clita. Et amet nonumy ut gubergren sit lobortis dolores et amet rebum justo consetetur invidunt ut eirmod sed. Et eirmod sed amet labore sed nonumy molestie. Et lorem lobortis sadipscing suscipit stet ipsum ut dolor vero. Accusam ut nonumy ut esse sed dolores feugiat stet in rebum dolor dolores luptatum assum vero duo. Dolores nonummy quis in dolore ea ipsum dolores et ut ipsum invidunt eos et dolor invidunt augue rebum et. Vulputate sanctus gubergren. Erat gubergren at imperdiet eirmod exerci accusam dolor. Dolor ut sed nostrud.',
-    width: 80,
-    alignment: TextAlignment.center,
-    theme: const ChubbyPanelTheme(
-      cornerStyle: CornerStyle.round,
-    ),
-    title: const ChubbyPanelTitle(
-      'Hello',
-    ),
-  );
+  // ChubbyBubble.panel(
+  //   'Takimata no consectetuer dolor iriure dolore. Takimata sea luptatum euismod dolor eu dolore eirmod tation nonumy aliquyam. Ipsum eirmod erat tempor sadipscing ipsum dolore et sed sea diam stet aliquyam possim eleifend no gubergren. Rebum gubergren mazim dolore et commodo magna ipsum rebum luptatum blandit et. Ut clita diam suscipit dolor erat dolore hendrerit sadipscing nostrud erat et lorem magna sit rebum. Dolore ipsum diam dolor no sed feugiat et takimata dolore lorem sed tation sit dignissim clita. Et amet nonumy ut gubergren sit lobortis dolores et amet rebum justo consetetur invidunt ut eirmod sed. Et eirmod sed amet labore sed nonumy molestie. Et lorem lobortis sadipscing suscipit stet ipsum ut dolor vero. Accusam ut nonumy ut esse sed dolores feugiat stet in rebum dolor dolores luptatum assum vero duo. Dolores nonummy quis in dolore ea ipsum dolores et ut ipsum invidunt eos et dolor invidunt augue rebum et. Vulputate sanctus gubergren. Erat gubergren at imperdiet eirmod exerci accusam dolor. Dolor ut sed nostrud.',
+  //   width: 80,
+  //   alignment: TextAlignment.center,
+  //   theme: const ChubbyPanelTheme(
+  //     cornerStyle: CornerStyle.round,
+  //   ),
+  //   title: const ChubbyPanelTitle(
+  //     'Hello',
+  //   ),
+  // );
+
+  ChubbyBubble.spinner(style: SpinnerStyle.meter);
 
   return 0;
 }

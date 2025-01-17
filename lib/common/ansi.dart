@@ -1,3 +1,13 @@
+enum AnsiCursor {
+  show("\x1b[?25h"),
+  hide("\x1b[?25l"),
+  ;
+
+  final String value;
+
+  const AnsiCursor(this.value);
+}
+
 enum AnsiStyle {
   bold("\x1B[1m"),
   dim("\x1B[2m"),
@@ -49,6 +59,7 @@ enum AnsiReset {
   inverse("\x1B[27m"),
   invisible("\x1B[28m"),
   strikethrough("\x1B[29m"),
+  line("\b"),
   ;
 
   final String value;
